@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
+using WsNotificacionesISRM.DTO;
 
 namespace WsNotificacionesISRM
 {
     /// <summary>
     /// Descripción breve de WebServiceCortesAlMes
     /// </summary>
-    [WebService(Namespace = "http://tempuri.org/")]
+    [WebService(Namespace = "http://ensa.com.pa/")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
     [System.ComponentModel.ToolboxItem(false)]
     // Para permitir que se llame a este servicio web desde un script, usando ASP.NET AJAX, quite la marca de comentario de la línea siguiente. 
@@ -18,9 +19,24 @@ namespace WsNotificacionesISRM
     {
 
         [WebMethod]
-        public string HelloWorld()
+        public RespuestaNotificaciones notificacionesCorteTODAS()
         {
-            return "Hola a todos";
+            RespuestaNotificaciones respuestaTodasNotificaciones = new RespuestaNotificaciones();
+            return respuestaTodasNotificaciones;
+        }
+        [WebMethod]
+        public RespuestaNotificaciones notificacionesCorteAREA(SolicitudCorteAREA solicitudCorteAREA) {
+            RespuestaNotificaciones respuestaNotificaciones = new RespuestaNotificaciones();
+            return respuestaNotificaciones;
+        }
+        [WebMethod]
+        RespuestaCorteNAC notificacionesCorteNAC(SolicitudCorteNAC solicitudCorteNAC) {
+            RespuestaCorteNAC respuestaCorteNAC = new RespuestaCorteNAC();
+            return respuestaCorteNAC;
+        }
+        [WebMethod] 
+        String hi() { 
+            return "hi"; 
         }
     }
 }
