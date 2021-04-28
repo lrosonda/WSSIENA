@@ -30,13 +30,9 @@ namespace WsNotificacionesISRM
             return respuestaNotificaciones;
         }
         [WebMethod]
-        RespuestaCorteNAC notificacionesCorteNAC(SolicitudCorteNAC solicitudCorteNAC) {
+        public RespuestaCorteNAC notificacionesCorteNAC(SolicitudCorteNAC solicitudCorteNAC) {
             RespuestaCorteNAC respuestaCorteNAC = new RespuestaCorteNAC();
             return respuestaCorteNAC;
-        }
-        [WebMethod] 
-        String hi() { 
-            return "hi"; 
         }
     }
 }
