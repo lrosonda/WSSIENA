@@ -13,6 +13,10 @@ namespace WsNotificacionesISRM.DTO
         private String _tipo;
 
         public string tipo { get => _tipo; set => _tipo = value; }
+        public override string ToString()
+        {
+            return $"{this._tipo}";
+        }
     }
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -29,7 +33,7 @@ namespace WsNotificacionesISRM.DTO
         private String _telefonoMovil;
         private String _areaAfectada;
         private String _estadoTrabajo;
-        private String  _fechaDeCorte;
+        private String _fechaDeCorte;
         private String _fechaDeRestauracion;
         private String _mensajeRespuesta;
         private Int32 _codigoMensaje;
@@ -47,26 +51,40 @@ namespace WsNotificacionesISRM.DTO
         public string fechaDeRestauracion { get => _fechaDeRestauracion; set => _fechaDeRestauracion = value; }
         public string mensajeRespuesta { get => _mensajeRespuesta; set => _mensajeRespuesta = value; }
         public int codigoMensaje { get => _codigoMensaje; set => _codigoMensaje = value; }
-    }
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ensa.com.pa/")]
-    public partial class SolitudConfirmacionIVR {
-        private Int32 _identificadorMensaje;
-        private String _fechaRegistro;
-        private String _estadoLLamada;
-        public int identificadorMensaje { get => _identificadorMensaje; set => _identificadorMensaje = value; }
-        public string fechaRegistro { get => _fechaRegistro; set => _fechaRegistro = value; }
-        public string estadoLLamada { get => _estadoLLamada; set => _estadoLLamada = value; }
-    }
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ensa.com.pa/")]
-    public partial class RespuestaConfirmacionIVR {
-        private String _mensajeRespuesta;
-        private Int32 _codigoMensaje;
-        public string mensajeRespuesta { get => _mensajeRespuesta; set => _mensajeRespuesta = value; }
-        public int codigoMensaje { get => _codigoMensaje; set => _codigoMensaje = value; }
-    }
+        public override string ToString()
+        {
+            return $"{this._apellido} {this._areaAfectada} {this._codigoMensaje} {this._estadoTrabajo} {this._fechaDeCorte} {this._fechaDeRestauracion} {this._identificadorMensaje} {this._mensajeRespuesta} {this._nombre} {this._segundoApellido} {this._telefonoMovil} {this._telefonoResidencial} {this._tipo}";
+        }
+        [System.SerializableAttribute()]
+        [System.Diagnostics.DebuggerStepThroughAttribute()]
+        [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ensa.com.pa/")]
+        public partial class SolitudConfirmacionIVR
+        {
+            private Int32 _identificadorMensaje;
+            private String _fechaRegistro;
+            private String _estadoLLamada;
+            public int identificadorMensaje { get => _identificadorMensaje; set => _identificadorMensaje = value; }
+            public string fechaRegistro { get => _fechaRegistro; set => _fechaRegistro = value; }
+            public string estadoLLamada { get => _estadoLLamada; set => _estadoLLamada = value; }
+            public override string ToString()
+            {
+                return $"{this._estadoLLamada} {this._fechaRegistro} {this._identificadorMensaje}";
+            }
+        }
+        [System.SerializableAttribute()]
+        [System.Diagnostics.DebuggerStepThroughAttribute()]
+        [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ensa.com.pa/")]
+        public partial class RespuestaConfirmacionIVR
+        {
+            private String _mensajeRespuesta;
+            private Int32 _codigoMensaje;
+            public string mensajeRespuesta { get => _mensajeRespuesta; set => _mensajeRespuesta = value; }
+            public int codigoMensaje { get => _codigoMensaje; set => _codigoMensaje = value; }
+            public override string ToString()
+            {
+                return $"{this._codigoMensaje} {this._mensajeRespuesta}";
+            }
+        }
 
+    }
 }

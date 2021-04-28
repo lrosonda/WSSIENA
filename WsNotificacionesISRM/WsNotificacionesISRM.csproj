@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Business\BusinesIVR.cs" />
     <Compile Include="DTO\IVRDTO.cs" />
     <Compile Include="DTO\PaginaWebDTO.cs" />
     <Compile Include="Global.asax.cs">
