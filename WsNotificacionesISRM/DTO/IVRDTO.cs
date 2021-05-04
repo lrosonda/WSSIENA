@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 
 namespace WsNotificacionesISRM.DTO
-{
+{//
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ensa.com.pa/")]

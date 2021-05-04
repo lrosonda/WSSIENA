@@ -101,7 +101,7 @@ namespace WsNotificacionesISRM
             List<Dictionary<String, Object>> keyValuePairs = new List<Dictionary<string, object>>();
             try
             {
-                using (SqlConnection cnxtar = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["QAMGADatabaseConnectionString"].ToString()))
+                using (SqlConnection cnxtar = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["SIENA_NOTIF"].ToString()))
                 {
                     String SqlActiontar = query;
                     using (SqlCommand cmdtar = new SqlCommand(SqlActiontar, cnxtar))

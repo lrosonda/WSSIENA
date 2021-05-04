@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Services;
 using WsNotificacionesISRM.Business;
 using WsNotificacionesISRM.DTO;
+using static WsNotificacionesISRM.DTO.RespuestaEnvioIVR;
 
 namespace WsNotificacionesISRM
 {
