@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
+using WsNotificacionesISRM.Business;
 using WsNotificacionesISRM.DTO;
 
 namespace WsNotificacionesISRM
@@ -21,8 +22,7 @@ namespace WsNotificacionesISRM
         [WebMethod]
         public RespuestaNotificaciones notificacionesCorteTODAS()
         {
-            RespuestaNotificaciones respuestaTodasNotificaciones = new RespuestaNotificaciones();
-            return respuestaTodasNotificaciones;
+            return new BusinessInterruptionsPerMonth().notificacionesCorteTODAS();
         }
         [WebMethod]
         public RespuestaNotificaciones notificacionesCorteAREA(SolicitudCorteAREA solicitudCorteAREA) {

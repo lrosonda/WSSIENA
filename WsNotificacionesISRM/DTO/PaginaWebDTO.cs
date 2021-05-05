@@ -89,10 +89,10 @@ namespace WsNotificacionesISRM.DTO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ensa.com.pa/")]
     public partial class RespuestaCorteNAC {
-        private DetalleNAC _detalle;
+        private DetalleNAC[] _detalle;
         private Encabezado _encabezado;
 
-        public DetalleNAC detalle { get => _detalle; set => _detalle = value; }
+        public DetalleNAC[] detalle { get => _detalle; set => _detalle = value; }
         public Encabezado encabezado { get => _encabezado; set => _encabezado = value; }
     }
 

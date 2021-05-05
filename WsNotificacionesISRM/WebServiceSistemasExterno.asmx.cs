@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
+using WsNotificacionesISRM.DTO;
 
 namespace WsNotificacionesISRM
 {
@@ -18,9 +19,10 @@ namespace WsNotificacionesISRM
     {
 
         [WebMethod]
-        public string HelloWorld()
+        public RespuestaEnvioPreASEP envioLotePreASEP()
         {
-            return "Hola a todos";
+            RespuestaEnvioPreASEP resp = new RespuestaEnvioPreASEP();
+            return resp;
         }
     }
 }

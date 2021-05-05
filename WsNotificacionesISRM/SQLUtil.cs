@@ -74,7 +74,7 @@ namespace WsNotificacionesISRM
             catch (Exception ex)
             {
                 log.Error("Query error :[" + query + "] in " + ex.ToString());
-                return EXECUTION_TO_BD_ERROR;
+                throw new SQLUtilException("Exception in executeQueryParams..");
             }
             return OK;
         }
@@ -93,7 +93,7 @@ namespace WsNotificacionesISRM
             catch (Exception ex)
             {
                 log.Error("Query error :[" + query + "] in " + ex.ToString());
-                return EXECUTION_TO_BD_ERROR;
+                throw new SQLUtilException("Exception in executeQuery..");
             }
             return OK;
         }
