@@ -32,6 +32,14 @@ namespace WsNotificacionesISRM.Business
             log.Debug("SQL02:" + sb.ToString());
             return SQLUtil.getQueryResult(sb.ToString(), columms);
         }
+
+        protected List<Dictionary<String, Object>> getFiltersByProcessId(Int32 idProcess) {
+            StringBuilder sb = new StringBuilder("SELECT filtro,id_proc_dep FROM NOTIFICA.filtros WHERE id_proceso =");
+            sb.Append(idProcess);
+            string[] columms = { "filtro", "id_proc_dep" };
+            return SQLUtil.getQueryResultList(sb.ToString(), columms);
+        }
+
         protected bool validateExecutionDays(string strDayExe, DateTime cDateTime)
         {
             if (strDayExe.Equals("TODOS"))
