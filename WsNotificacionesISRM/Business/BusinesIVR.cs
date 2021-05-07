@@ -14,15 +14,23 @@ namespace WsNotificacionesISRM.Business
     public class BusinesIVR : BusinessParent
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+<<<<<<< HEAD
         private static int A_DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
 
 
         public RespuestaConfirmacionIVR confirmacionIVR(SolitudConfirmacionIVR request)
         {
+=======
+        private static int A_DAY_IN_MILLISECONDS= 1000*60*60*24;
+
+
+        public RespuestaConfirmacionIVR confirmacionIVR(SolitudConfirmacionIVR request) {
+>>>>>>> 00bf4cb (IVR business terminated but not tested)
             log.Debug("Welcome!!");
             log.Debug("request: " + request.ToString());
             RespuestaConfirmacionIVR response = new RespuestaConfirmacionIVR();
             log.Debug("response:" + response.ToString());
+<<<<<<< HEAD
             try
             {
                 string otherUpdate = ", mensaje_actualizacion='";
@@ -56,6 +64,22 @@ namespace WsNotificacionesISRM.Business
                 response.mensajeRespuesta = "Error, operación fallida de la base de datos";
                 response.codigoMensaje = -1001;
                 log.Error(e.Message);
+=======
+            string otherUpdate = ", mensaje_actualizacion='";
+            switch (request.estadoLLamada) {
+                case "E":
+                    otherUpdate = otherUpdate + "Exito'";
+                    updateIVR("EV002", request.identificadorMensaje,"", otherUpdate);
+                    break;
+                case "O":
+                    otherUpdate = otherUpdate + "Ocupado'";
+                    updateIVR("EV003", request.identificadorMensaje, "", otherUpdate);
+                    break;
+                case "N":
+                    otherUpdate = otherUpdate + "No constesta'";
+                    updateIVR("EV003", request.identificadorMensaje,"", otherUpdate);
+                    break;
+>>>>>>> 00bf4cb (IVR business terminated but not tested)
             }
             log.Debug("Bey!!");
             return response;
@@ -218,20 +242,33 @@ namespace WsNotificacionesISRM.Business
         }
         private void updateIVR(string status, Int32 idmanReceived)
         {
+<<<<<<< HEAD
             updateIVR(status, idmanReceived, "", "");
         }
         private static void updateIVR(string status, Int32 idmanReceived, string otherOondition, string otherUpdate)
+=======
+            updateIVR(status, idmanReceived, "","");
+        }
+        private static void updateIVR(string status, Int32 idmanReceived, string otherOondition,string otherUpdate)
+>>>>>>> 00bf4cb (IVR business terminated but not tested)
         {
             StringBuilder sb = new StringBuilder("UPDATE NOTIFICA.notificaciones_procesadas SET status_IVR ='");
             if (otherUpdate.Length > 1)
             {
                 sb.Append(status).Append(otherUpdate).Append("', fecha_act_IVR = GETDATE()").Append(" WHERE id_maniobra_recibida=").Append(idmanReceived);
             }
+<<<<<<< HEAD
             else
             {
                 sb.Append(status).Append("', fecha_act_IVR = GETDATE()").Append(" WHERE id_maniobra_recibida=").Append(idmanReceived);
             }
 
+=======
+            else {
+                sb.Append(status).Append("', fecha_act_IVR = GETDATE()").Append(" WHERE id_maniobra_recibida=").Append(idmanReceived);
+            }
+            
+>>>>>>> 00bf4cb (IVR business terminated but not tested)
             if (otherOondition.Length > 1)
             {
                 sb.Append(otherOondition);
@@ -242,7 +279,11 @@ namespace WsNotificacionesISRM.Business
         private static void doWorkProcessUpdate(Int32 idmanReceived, int waittime)
         {
             Thread.Sleep(waittime);
+<<<<<<< HEAD
             updateIVR("EV004", idmanReceived, " AND status_IVR ='EV001'", "");
+=======
+            updateIVR("EV004", idmanReceived, " AND status_IVR ='EV001'","");
+>>>>>>> 00bf4cb (IVR business terminated but not tested)
         }
 
     }

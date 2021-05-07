@@ -107,6 +107,7 @@
     <Compile Include="Business\BusinesIVR.cs" />
     <Compile Include="Business\BusinessInterruptionsPerMonth.cs" />
     <Compile Include="Business\BusinessParent.cs" />
+    <Compile Include="DTO\ExternalSystemsDTO.cs" />
     <Compile Include="DTO\IVRDTO.cs" />
     <Compile Include="DTO\PaginaWebDTO.cs" />
     <Compile Include="DTO\PreASEPDTO.cs" />

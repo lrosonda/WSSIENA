@@ -10,7 +10,7 @@ namespace WsNotificacionesISRM
     /// <summary>
     /// Descripción breve de WebServiceSistemasExterno
     /// </summary>
-    [WebService(Namespace = "http://tempuri.org/")]
+    [WebService(Namespace = "http://ensa.com.pa/")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
     [System.ComponentModel.ToolboxItem(false)]
     // Para permitir que se llame a este servicio web desde un script, usando ASP.NET AJAX, quite la marca de comentario de la línea siguiente. 
@@ -19,9 +19,9 @@ namespace WsNotificacionesISRM
     {
 
         [WebMethod]
-        public RespuestaEnvioPreASEP envioLotePreASEP()
+        public RespuestaSistemaExternos envioCorreoExterno(SolicitudSistemaExternos solicitud)
         {
-            RespuestaEnvioPreASEP resp = new RespuestaEnvioPreASEP();
+            RespuestaSistemaExternos resp = new RespuestaSistemaExternos();
             return resp;
         }
     }
