@@ -23,13 +23,11 @@ namespace WsNotificacionesISRM
         [WebMethod]
         public RespuestaEnvioIVR envioIVR(SolicitudEnvioIVR solicitudEnvioIVR)
         {
-            BusinesIVR ivr = new BusinesIVR();
-            return ivr.envioIVR(solicitudEnvioIVR);
+           return new BusinesIVR().envioIVR(solicitudEnvioIVR);
         }
         [WebMethod]
-        public RespuestaConfirmacionIVR confirmacionIVR(SolitudConfirmacionIVR solitudConfirmacionIVR) {
-            RespuestaConfirmacionIVR respuestaConfirmacionIVR = new RespuestaConfirmacionIVR();
-            return respuestaConfirmacionIVR;
+        public RespuestaConfirmacionIVR confirmacionIVR(SolitudConfirmacionIVR solitudConfirmacionIVR) {  
+            return new BusinesIVR().confirmacionIVR(solitudConfirmacionIVR);
         }
     }
 }

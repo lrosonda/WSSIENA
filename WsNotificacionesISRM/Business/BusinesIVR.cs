@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Web;
 using WsNotificacionesISRM.DTO;
+using static WsNotificacionesISRM.DTO.RespuestaEnvioIVR;
 
 namespace WsNotificacionesISRM.Business
 {
@@ -13,6 +14,32 @@ namespace WsNotificacionesISRM.Business
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static int A_DAY_IN_MILLISECONDS= 1000*60*60*24;
+
+
+        public RespuestaConfirmacionIVR confirmacionIVR(SolitudConfirmacionIVR request) {
+            log.Debug("Welcome!!");
+            log.Debug("request: " + request.ToString());
+            RespuestaConfirmacionIVR response = new RespuestaConfirmacionIVR();
+            log.Debug("response:" + response.ToString());
+            string otherUpdate = ", mensaje_actualizacion='";
+            switch (request.estadoLLamada) {
+                case "E":
+                    otherUpdate = otherUpdate + "Exito'";
+                    updateIVR("EV002", request.identificadorMensaje,"", otherUpdate);
+                    break;
+                case "O":
+                    otherUpdate = otherUpdate + "Ocupado'";
+                    updateIVR("EV003", request.identificadorMensaje, "", otherUpdate);
+                    break;
+                case "N":
+                    otherUpdate = otherUpdate + "No constesta'";
+                    updateIVR("EV003", request.identificadorMensaje,"", otherUpdate);
+                    break;
+            }
+            log.Debug("Bey!!");
+            return response;
+        }
+
         public RespuestaEnvioIVR envioIVR(SolicitudEnvioIVR solicitudEnvioIVR)
         {
             log.Debug("Welcome!!");
@@ -170,12 +197,19 @@ namespace WsNotificacionesISRM.Business
         }
         private void updateIVR(string status, Int32 idmanReceived)
         {
-            updateIVR(status, idmanReceived, "");
+            updateIVR(status, idmanReceived, "","");
         }
-        private static void updateIVR(string status, Int32 idmanReceived, string otherOondition)
+        private static void updateIVR(string status, Int32 idmanReceived, string otherOondition,string otherUpdate)
         {
             StringBuilder sb = new StringBuilder("UPDATE NOTIFICA.notificaciones_procesadas SET status_IVR ='");
-            sb.Append(status).Append("', fecha_act_IVR = GETDATE()").Append(" WHERE id_maniobra_recibida=").Append(idmanReceived);
+            if (otherUpdate.Length > 1)
+            {
+                sb.Append(status).Append(otherUpdate).Append("', fecha_act_IVR = GETDATE()").Append(" WHERE id_maniobra_recibida=").Append(idmanReceived);
+            }
+            else {
+                sb.Append(status).Append("', fecha_act_IVR = GETDATE()").Append(" WHERE id_maniobra_recibida=").Append(idmanReceived);
+            }
+            
             if (otherOondition.Length > 1)
             {
                 sb.Append(otherOondition);
@@ -186,7 +220,7 @@ namespace WsNotificacionesISRM.Business
         private static void doWorkProcessUpdate( Int32 idmanReceived,int waittime)
         {
             Thread.Sleep(waittime);
-            updateIVR("EV004", idmanReceived, " AND status_IVR ='EV001'");
+            updateIVR("EV004", idmanReceived, " AND status_IVR ='EV001'","");
         }
 
     }
