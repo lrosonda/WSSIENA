@@ -14,7 +14,7 @@ namespace WsNotificacionesISRM.DTO
         private Detalle[] _detalle;
 
         public Encabezado encabezado { get => _encabezado; set => _encabezado = value; }
-        public Detalle[] Detalle { get => _detalle; set => _detalle = value; }
+        public Detalle[] detalle { get => _detalle; set => _detalle = value; }
         public override string ToString() {
             return $"{this._encabezado}{this._detalle}";
         }
@@ -41,19 +41,20 @@ namespace WsNotificacionesISRM.DTO
     public partial class Detalle { 
         private String _areaAfectada;
         private String _fechaAfetacion;
-        private Int16 _horaInicioAfectacion;
-        private Int16 _horaFinAfectacion;
-        private Int16 _cantidadClienteAfectado;
+        private Int32 _horaInicioAfectacion;
+        private Int32 _horaFinAfectacion;
+        private Int32 _cantidadClienteAfectado;
         private String _horasAfectacion;
         private String _duracion;
 
         public string areaAfectada { get => _areaAfectada; set => _areaAfectada = value; }
         public string fechaAfetacion { get => _fechaAfetacion; set => _fechaAfetacion = value; }
-        public short horaInicioAfectacion { get => _horaInicioAfectacion; set => _horaInicioAfectacion = value; }
-        public short horaFinAfectacion { get => _horaFinAfectacion; set => _horaFinAfectacion = value; }
-        public short cantidadClienteAfectado { get => _cantidadClienteAfectado; set => _cantidadClienteAfectado = value; }
-        public string horasAfectacion { get => _horasAfectacion; set => _horasAfectacion = value; }
+        public int horaInicioAfectacion { get => _horaInicioAfectacion; set => _horaInicioAfectacion = value; }
+        public int horaFinAfectacion { get => _horaFinAfectacion; set => _horaFinAfectacion = value; }
+        public int cantidadClienteAfectado { get => _cantidadClienteAfectado; set => _cantidadClienteAfectado = value; }
+        public string corasAfectacion { get => _horasAfectacion; set => _horasAfectacion = value; }
         public string duracion { get => _duracion; set => _duracion = value; }
+
         public override string ToString()
         {
             return $"{this._cantidadClienteAfectado}{this._areaAfectada}{this._duracion}{this._fechaAfetacion}{this._horaFinAfectacion}{this._horaInicioAfectacion}"; 
@@ -91,17 +92,18 @@ namespace WsNotificacionesISRM.DTO
     {
         private String _areaAfectada;
         private String _fechaAfetacion;
-        private Int16 _horaInicioAfectacion;
-        private Int16 _horaFinAfectacion;
+        private Int32 _horaInicioAfectacion;
+        private Int32 _horaFinAfectacion;
         private String _horasAfectacion;
         private String _duracion;
 
         public string areaAfectada { get => _areaAfectada; set => _areaAfectada = value; }
         public string fechaAfetacion { get => _fechaAfetacion; set => _fechaAfetacion = value; }
-        public short horaInicioAfectacion { get => _horaInicioAfectacion; set => _horaInicioAfectacion = value; }
-        public short horaFinAfectacion { get => _horaFinAfectacion; set => _horaFinAfectacion = value; }
+        public int horaInicioAfectacion { get => _horaInicioAfectacion; set => _horaInicioAfectacion = value; }
+        public int horaFinAfectacion { get => _horaFinAfectacion; set => _horaFinAfectacion = value; }
         public string horasAfectacion { get => _horasAfectacion; set => _horasAfectacion = value; }
         public string duracion { get => _duracion; set => _duracion = value; }
+
         public override string ToString()
         {
             return $"{this._areaAfectada}{this._duracion}{this._fechaAfetacion}{this._horaFinAfectacion}{this._horaInicioAfectacion}{this._horaInicioAfectacion}{this._horasAfectacion}";

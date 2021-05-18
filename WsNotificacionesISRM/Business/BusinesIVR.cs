@@ -64,11 +64,11 @@ namespace WsNotificacionesISRM.Business
             log.Debug("Welcome!!");
             log.Debug("solicitudEnvioIVR: " + solicitudEnvioIVR.ToString());
             RespuestaEnvioIVR resp = new RespuestaEnvioIVR();
-            Dictionary<String, Object> keyValuesProcess = retrieveNotificationProcesses("WS_IVR");
-            string status = (string)keyValuesProcess["status"];
-            log.Debug("status:" + status);
             try
-            {
+            { 
+                Dictionary<String, Object> keyValuesProcess = retrieveNotificationProcesses("WS_IVR");
+                string status = (string)keyValuesProcess["status"];
+                log.Debug("status:" + status);
                 if (status.Equals("NT001"))
                 {
                     if (runIVRProcess(keyValuesProcess, solicitudEnvioIVR, resp))

@@ -24,7 +24,7 @@ namespace WsNotificacionesISRM.Business
             return SQLUtil.getQueryResult(sb.ToString(), columms);
         }
 
-        protected Dictionary<String, Object> getProcessParameters(Int32 iDprocess)
+        protected static Dictionary<String, Object> getProcessParameters(Int32 iDprocess)
         {
             StringBuilder sb = new StringBuilder("SELECT fecha_inicial, fecha_vencimiento, dias, hora_inicial, hora_fin FROM NOTIFICA.parametros_procesos WHERE id_proceso =");
             sb.Append(iDprocess);
@@ -40,7 +40,7 @@ namespace WsNotificacionesISRM.Business
             return SQLUtil.getQueryResultList(sb.ToString(), columms);
         }
 
-        protected bool validateExecutionDays(string strDayExe, DateTime cDateTime)
+        protected static bool validateExecutionDays(string strDayExe, DateTime cDateTime)
         {
             if (strDayExe.Equals("TODOS"))
             {
@@ -86,7 +86,7 @@ namespace WsNotificacionesISRM.Business
             return false;
         }
 
-        protected bool validateExecutionHours(string iniHour, string endHour, DateTime cDateTime)
+        protected static bool validateExecutionHours(string iniHour, string endHour, DateTime cDateTime)
         {
             int h = cDateTime.Hour;
             int m = cDateTime.Minute;
