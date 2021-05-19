@@ -136,8 +136,8 @@ namespace WsNotificacionesISRM.Business
                         sEndParam = Int32.Parse(ssEnd);
                     }
 
-                    if ((h >= hIniParam && m >= mIniParam && s >= sParam)
-                        && ((h < hEndParam) || (h == hEndParam && m < mEndParam) ||
+                    if (((h >= hIniParam && m >= mIniParam && s >= sParam)
+                        && ((h < hEndParam) || (h == hEndParam && m < mEndParam)) ||
                         (h == hEndParam && m == mEndParam && s <= sEndParam)))
                     {
                         return true;

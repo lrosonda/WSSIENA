@@ -26,13 +26,12 @@ namespace WsNotificacionesISRM
         }
         [WebMethod]
         public RespuestaNotificaciones notificacionesCorteAREA(SolicitudCorteAREA solicitudCorteAREA) {
-            RespuestaNotificaciones respuestaNotificaciones = new RespuestaNotificaciones();
-            return respuestaNotificaciones;
+            
+            return new BusinessInterruptionsPerMonth().notificacionesCorteAREA( solicitudCorteAREA);
         }
         [WebMethod]
         public RespuestaCorteNAC notificacionesCorteNAC(SolicitudCorteNAC solicitudCorteNAC) {
-            RespuestaCorteNAC respuestaCorteNAC = new RespuestaCorteNAC();
-            return respuestaCorteNAC;
+            return new BusinessInterruptionsPerMonth().notificacionesCorteNAC( solicitudCorteNAC);
         }
     }
 }

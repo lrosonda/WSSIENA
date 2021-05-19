@@ -11,12 +11,12 @@ namespace WsNotificacionesISRM.DTO
     public partial class RespuestaNotificaciones
     {
         private Encabezado _encabezado;
-        private Detalle[] _detalle;
+        private Detalle[] _detalles;
 
         public Encabezado encabezado { get => _encabezado; set => _encabezado = value; }
-        public Detalle[] detalle { get => _detalle; set => _detalle = value; }
+        public Detalle[] detalles { get => _detalles; set => _detalles = value; }
         public override string ToString() {
-            return $"{this._encabezado}{this._detalle}";
+            return $"{this._encabezado}{this._detalles}";
         }
     }
     [System.SerializableAttribute()]
@@ -114,14 +114,14 @@ namespace WsNotificacionesISRM.DTO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ensa.com.pa/")]
     public partial class RespuestaCorteNAC {
-        private DetalleNAC[] _detalle;
         private Encabezado _encabezado;
-
-        public DetalleNAC[] detalle { get => _detalle; set => _detalle = value; }
+        private DetalleNAC[] _detalles;
         public Encabezado encabezado { get => _encabezado; set => _encabezado = value; }
+        public DetalleNAC[] detalles { get => _detalles; set => _detalles = value; }
+        
         public override string ToString()
         {
-            return $"{this._detalle}{this._encabezado}";
+            return $"{this._detalles}{this._encabezado}";
         }
     }
 
