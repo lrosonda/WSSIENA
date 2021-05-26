@@ -15,6 +15,7 @@ namespace WsNotificacionesISRM.Business
     public class BusinessParent
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        protected static int A_DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
         protected Dictionary<String, Object> retrieveNotificationProcesses(string nameProcess)
         {
             StringBuilder sb = new StringBuilder("SELECT id_proceso, status, fecha_actualizacion, repetir_cada, repetir_x, sql");
@@ -26,9 +27,9 @@ namespace WsNotificacionesISRM.Business
 
         protected static Dictionary<String, Object> getProcessParameters(Int32 iDprocess)
         {
-            StringBuilder sb = new StringBuilder("SELECT fecha_inicial, fecha_vencimiento, dias, hora_inicial, hora_fin FROM NOTIFICA.parametros_procesos WHERE id_proceso =");
+            StringBuilder sb = new StringBuilder("SELECT fecha_inicial, fecha_vencimiento, hora_inicial, hora_fin ,(CASE dias WHEN   'TODOS' THEN  'OK' ELSE CASE  DATEPART(weekday,GETDATE()) WHEN 1 THEN CASE dia_domingo WHEN 'TRUE' THEN 'OK' ELSE 'NO' END WHEN 2 THEN CASE dia_lunes WHEN 'TRUE' THEN 'OK' ELSE 'NO' END WHEN 3 THEN CASE dia_martes WHEN 'TRUE' THEN 'OK' ELSE 'NO' END WHEN 4 THEN CASE dia_miercoles WHEN 'TRUE' THEN 'OK' ELSE 'NO' END WHEN 5 THEN CASE dia_jueves WHEN 'TRUE' THEN 'OK' ELSE 'NO' END WHEN 6 THEN CASE dia_viernes WHEN 'TRUE' THEN 'OK' ELSE 'NO' END WHEN 7 THEN CASE dia_sabado WHEN 'TRUE' THEN 'OK' ELSE 'NO' END END END) AS dayExec FROM NOTIFICA.parametros_procesos WHERE id_proceso =");
             sb.Append(iDprocess);
-            string[] columms = { "fecha_inicial", "dias", "hora_inicial", "hora_fin" };
+            string[] columms = { "fecha_inicial", "hora_inicial", "hora_fin", "dayExec" };
             log.Debug("SQL02:" + sb.ToString());
             return SQLUtil.getQueryResult(sb.ToString(), columms);
         }
@@ -40,48 +41,11 @@ namespace WsNotificacionesISRM.Business
             return SQLUtil.getQueryResultList(sb.ToString(), columms);
         }
 
-        protected static bool validateExecutionDays(string strDayExe, DateTime cDateTime)
+        protected static bool validateExecutionDays(string strDayExe)
         {
-            if (strDayExe.Equals("TODOS"))
+            if (strDayExe.Equals("OK"))
             {
                 return true;
-            }
-            else
-            {
-                string[] split = strDayExe.Split(new Char[] { ';' });
-                foreach (string sDay in split)
-                {
-                    String _sDay = sDay.ToUpper();
-                    if (_sDay.Equals("LUNES") && cDateTime.DayOfWeek == DayOfWeek.Monday)
-                    {
-                        return true;
-                    }
-                    else if (_sDay.Equals("MARTES") && cDateTime.DayOfWeek == DayOfWeek.Tuesday)
-                    {
-                        return true;
-                    }
-                    else if (_sDay.Equals("MIERCOLES") && cDateTime.DayOfWeek == DayOfWeek.Wednesday)
-                    {
-                        return true;
-                    }
-                    else if (_sDay.Equals("JUEVES") && cDateTime.DayOfWeek == DayOfWeek.Thursday)
-                    {
-                        return true;
-                    }
-                    else if (_sDay.Equals("VIERNES") && cDateTime.DayOfWeek == DayOfWeek.Friday)
-                    {
-                        return true;
-                    }
-                    else if (_sDay.Equals("SABADO") && cDateTime.DayOfWeek == DayOfWeek.Saturday)
-                    {
-                        return true;
-                    }
-                    else if (_sDay.Equals("DOMINGO") && cDateTime.DayOfWeek == DayOfWeek.Sunday)
-                    {
-                        return true;
-                    }
-                }
-
             }
             return false;
         }

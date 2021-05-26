@@ -11,10 +11,10 @@ namespace WsNotificacionesISRM.DTO
     public partial class RespuestaEnvioPreASEP
     {
         private EncabezadoEnvioPreASEP _encabezado;
-        private DetalleEnvioPreASEP[] _detalle;
+        private DetalleEnvioPreASEP[] _detalles;
 
         public EncabezadoEnvioPreASEP encabezado { get => _encabezado; set => _encabezado = value; }
-        public DetalleEnvioPreASEP[] Detalle { get => _detalle; set => _detalle = value; }
+        public DetalleEnvioPreASEP[] detalles { get => _detalles; set => _detalles = value; }
     }
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -24,11 +24,11 @@ namespace WsNotificacionesISRM.DTO
         private String _mensajeRespuesta;
         private Int32 _codigoMensaje;
         private Int32 _totalRegistrosEnviados;
-        private Int16 _numeroLote;
+        private Int32 _numeroLote;
         public string mensajeRespuesta { get => _mensajeRespuesta; set => _mensajeRespuesta = value; }
         public int codigoMensaje { get => _codigoMensaje; set => _codigoMensaje = value; }
         public int totalRegistrosEnviados { get => _totalRegistrosEnviados; set => _totalRegistrosEnviados = value; }
-        public short numeroLote { get => _numeroLote; set => _numeroLote = value; }
+        public int numeroLote { get => _numeroLote; set => _numeroLote = value; }
     }
 
     [System.SerializableAttribute()]
@@ -38,16 +38,16 @@ namespace WsNotificacionesISRM.DTO
     {
         private string _fechaSENDMSG;
         private string _MRID_SAP;
-        private string _MRID_SDPNA;
+        private string  _MRID_SDPNAC;
         private string _MRDIDWOR;
         private string _TIPO_MSG;
         private Int32 _idNotificacionEnviada;
 
         public string fechaSENDMSG { get => fechaSENDMSG; set => fechaSENDMSG = value; }
-        public string MRID_SAP1 { get => _MRID_SAP; set => _MRID_SAP = value; }
-        public string MRID_SDPNA1 { get => _MRID_SDPNA; set => _MRID_SDPNA = value; }
-        public string MRDIDWOR1 { get => _MRDIDWOR; set => _MRDIDWOR = value; }
-        public string TIPO_MSG1 { get => _TIPO_MSG; set => _TIPO_MSG = value; }
+        public string MRID_SAP { get => _MRID_SAP; set => _MRID_SAP = value; }
+        public string MRID_SDPNAC { get => _MRID_SDPNAC; set => _MRID_SDPNAC = value; }
+        public string MRDIDWOR { get => _MRDIDWOR; set => _MRDIDWOR = value; }
+        public string TIPO_MSG { get => _TIPO_MSG; set => _TIPO_MSG = value; }
         public int idNotificacionEnviada { get => _idNotificacionEnviada; set => _idNotificacionEnviada = value; }
     }
     [System.SerializableAttribute()]

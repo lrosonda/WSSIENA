@@ -14,7 +14,7 @@ namespace WsNotificacionesISRM.Business
     public class BusinesIVR : BusinessParent
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private static int A_DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
+       
 
         public RespuestaConfirmacionIVR confirmacionIVR(SolitudConfirmacionIVR request) {
             log.Debug("Welcome!!");
@@ -108,7 +108,7 @@ namespace WsNotificacionesISRM.Business
             Int32 idProcess = (Int32)dProcess["id_proceso"];
             Dictionary<String, Object> keyValuePairs = getProcessParameters(idProcess);
             DateTime dateIni = (DateTime)keyValuePairs["fecha_inicial"];
-            string strDayExe = (String)keyValuePairs["dias"];
+            string strDayExe = (String)keyValuePairs["dayExec"];
             string iniHour = (String)keyValuePairs["hora_inicial"];
             string endHour = (String)keyValuePairs["hora_fin"];
             string sql = (String)dProcess["sql"];
@@ -117,7 +117,7 @@ namespace WsNotificacionesISRM.Business
             int comparetoDate = currentDateTime.CompareTo(dateIni);
             if (comparetoDate >= 0 && !keyValuePairs.ContainsKey("fecha_vencimiento"))
             {
-                if (validateExecutionDays(strDayExe, currentDateTime))
+                if (validateExecutionDays(strDayExe))
                 {
                     if (!validateExecutionHours(iniHour, endHour, currentDateTime))
                     {
@@ -161,7 +161,8 @@ namespace WsNotificacionesISRM.Business
             StringBuilder sbFilters = new StringBuilder();
             if (resquest != null && resquest.tipo != null && resquest.tipo.Length > 0)
             {
-                sbFilters.Append("'").Append(resquest.tipo).Append("'");
+                //sbFilters.Append("'").Append(resquest.tipo).Append("'");
+                sbFilters.Append(" '%CORTE%' AND UPPER(typeOfWork) IN ('").Append(resquest.tipo).Append("'");
             }
             if (filters != null && filters.Count() > 0)
             {
@@ -173,13 +174,15 @@ namespace WsNotificacionesISRM.Business
                     }
                     else
                     {
-                        sbFilters.Append("'").Append(filter["filtro"]).Append("'");
+                        //sbFilters.Append("'").Append(filter["filtro"]).Append("'");
+                        sbFilters.Append(" '%CORTE%' AND UPPER(typeOfWork) IN ('").Append(filter["filtro"]).Append("'");
                     }
                 }
+                sbFilters.Append("')");
             }
             if (sbFilters.Length > 0)
             {
-                sb.Replace("'CORTE'", sbFilters.ToString());
+                sb.Replace("'%CORTE%'", sbFilters.ToString());
             }
             log.Debug("SQL maneuversReceived:" + sb.ToString());
             string[] columms = { "IdentificadorMensaje", "areaAfectada", "tipo", "FechaDeCorte", "FechaDeRestauracion", "estadoTrabajo", "nombre", "segundoNombre", "telefonoResidencial", "telefonoMovil", "switchingPlan_mRID" };
@@ -224,7 +227,7 @@ namespace WsNotificacionesISRM.Business
             StringBuilder sb = new StringBuilder("UPDATE NOTIFICA.notificaciones_procesadas SET status_IVR ='");
             if (otherUpdate.Length > 1)
             {
-                sb.Append(status).Append(otherUpdate).Append("', fecha_act_IVR = GETDATE()").Append(" WHERE id_maniobra_recibida=").Append(idmanReceived);
+                sb.Append(status).Append("'").Append(otherUpdate).Append(", fecha_act_IVR = GETDATE()").Append(" WHERE id_maniobra_recibida=").Append(idmanReceived);
             }
             else
             {

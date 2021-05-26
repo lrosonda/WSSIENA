@@ -158,7 +158,7 @@ namespace WsNotificacionesISRM.Business
             Int32 idProcess = (Int32)keyValuesProcess["id_proceso"];
             Dictionary<String, Object> keyValuePairs = getProcessParameters(idProcess);
             DateTime dateIni = (DateTime)keyValuePairs["fecha_inicial"];
-            string strDayExe = (String)keyValuePairs["dias"];
+            string strDayExe = (String)keyValuePairs["dayExec"];
             string iniHour = (String)keyValuePairs["hora_inicial"];
             string endHour = (String)keyValuePairs["hora_fin"];
             string sql = (String)keyValuesProcess["sql"];
@@ -166,7 +166,7 @@ namespace WsNotificacionesISRM.Business
             int comparetoDate = currentDateTime.CompareTo(dateIni);
             if (comparetoDate >= 0 && !keyValuePairs.ContainsKey("fecha_vencimiento"))
             {
-                if (validateExecutionDays(strDayExe, currentDateTime))
+                if (validateExecutionDays(strDayExe))
                 {
                     if (iniHour != null && endHour != null)
                     {
@@ -194,9 +194,9 @@ namespace WsNotificacionesISRM.Business
             }
             else
             {
-                errorFillREsponse(t, "Error, webservice de la pagina web de ENSA inactivo", -301);
+                return errorFillREsponse(t, "Error, webservice de la pagina web de ENSA inactivo", -301);
             }
-            return null;
+
         }
 
 
@@ -329,6 +329,6 @@ namespace WsNotificacionesISRM.Business
             }
             return null;
         }
-
+      
     }
 }
