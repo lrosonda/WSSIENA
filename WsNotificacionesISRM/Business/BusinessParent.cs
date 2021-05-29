@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MailKit.Net.Smtp;
+using MailKit.Security;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,7 +36,8 @@ namespace WsNotificacionesISRM.Business
             return SQLUtil.getQueryResult(sb.ToString(), columms);
         }
 
-        protected List<Dictionary<String, Object>> getFiltersByProcessId(Int32 idProcess) {
+        protected List<Dictionary<String, Object>> getFiltersByProcessId(Int32 idProcess)
+        {
             StringBuilder sb = new StringBuilder("SELECT filtro,id_proc_dep FROM NOTIFICA.filtros WHERE id_proceso =");
             sb.Append(idProcess);
             string[] columms = { "filtro", "id_proc_dep" };
@@ -115,6 +118,88 @@ namespace WsNotificacionesISRM.Business
                 }
             }
             return false;
+        }
+        protected void SMTPErrorHandling(SMTP.MailRequest mailRequest, Exception e, Type t, Dictionary<String, Object> dcod)
+        {
+            Dictionary<String, Object> fields = new Dictionary<string, object>();
+            //"asunto","codRespSOAP","descripcionErrorSOAP","codRespSMTP","descripcionErrorSMTP",codSistemaExterno
+            fields.Add("asunto", mailRequest.Subject);
+            fields.Add("descripcionErrorSOAP", "");
+            fields.Add("codRespSOAP", 0);
+            fields.Add("codSistemaExterno", dcod["codSistemaExterno"]);
+            if (t.Equals(typeof(SmtpCommandException)))
+            {
+                SmtpCommandException ex = (SmtpCommandException)e;
+                switch (ex.ErrorCode)
+                {
+                    case SmtpErrorCode.RecipientNotAccepted:
+                        //    Console.WriteLine("\tRecipient not accepted: {0}", ex.Mailbox);
+                        fields.Add("descripcionErrorSMTP", "Error, en los datos del destinatario del correo");
+                        fields.Add("codRespSMTP", -1004);
+                        break;
+                    case SmtpErrorCode.SenderNotAccepted:
+                        //   Console.WriteLine("\tSender not accepted: {0}", ex.Mailbox);
+                        fields.Add("descripcionErrorSMTP", "Error, en los datos del remitente del correo");
+                        fields.Add("codRespSMTP", -1005);
+                        break;
+                    case SmtpErrorCode.MessageNotAccepted:
+                        //   Console.WriteLine("\tMessage not accepted.");
+                        fields.Add("descripcionErrorSMTP", "Error, en los datos del mensaje del correo");
+                        fields.Add("codRespSMTP", -1006);
+                        break;
+                }
+            }
+            else if (t.Equals(typeof(SmtpProtocolException)))
+            {
+                fields.Add("descripcionErrorSMTP", "Error, en el protocolo de envio (SMTP) del correo");
+                fields.Add("codRespSMTP", -1007);
+            }
+            else if (t.Equals(typeof(AuthenticationException)))
+            {
+                fields.Add("descripcionErrorSMTP", "Error, en la autentificación de usuario del correo");
+                fields.Add("codRespSMTP", -1003);
+            }
+            insertLogEnvioCorreoExterno(fields);
+        }
+        protected void SaveCorrectMailDelivery(SMTP.MailRequest mailRequest, Dictionary<String, Object> dcod)
+        {
+            Dictionary<String, Object> fields = new Dictionary<string, object>();
+            //"asunto","codRespSOAP","descripcionErrorSOAP","codRespSMTP","descripcionErrorSMTP",codSistemaExterno
+            fields.Add("asunto", mailRequest.Subject);
+            fields.Add("descripcionErrorSOAP", "");
+            fields.Add("codRespSOAP", 0);
+            fields.Add("descripcionErrorSMTP", "Operación realizada de forma exitosa");
+            fields.Add("codRespSMTP", 0);
+            insertLogEnvioCorreoExterno(fields);
+        }
+        private void insertLogEnvioCorreoExterno(Dictionary<String, Object> fields)
+        {
+            StringBuilder sb = new StringBuilder("INSERT INTO NOTIFICA.log_envio_correo_externo (asunto,cod_resp_SOAP,descripcion_error_SOAP,cod_resp_SMTP,descripcion_error_SMTP,fecha_registro ,cod_sistema_externo) VALUES('");
+            sb.Append(fields["asunto"]).Append("',").Append(fields["codRespSOAP"]).Append(",'").Append(fields["descripcionErrorSOAP"]).Append("',").Append(fields["codRespSMTP"]).Append(",'").Append(fields["descripcionErrorSMTP"]).Append("',GETDATE(),'").Append(fields["codSistemaExterno"]).Append("')");
+            log.Debug("insertLogEnvioCorreoExterno:" + sb.ToString());
+            SQLUtil.executeQuery(sb.ToString());
+        }
+
+        private string getExternalCode(Dictionary<String, Object> dcod) {
+            string code = (string)dcod["codSistemaExterno"];
+            if (ExistExternalCode(code)) {
+                InsertExternalCode(dcod);
+            }
+            return code;
+        }
+        private void InsertExternalCode(Dictionary<String, Object> dcod) {
+            StringBuilder sb = new StringBuilder("INSERT INTO NOTIFICA.codigos (codigo,descripcion,gruposid) VALUES('");
+            sb.Append(dcod["codSistemaExterno"]).Append("','").Append(dcod["description"]).Append("')");
+            SQLUtil.executeQuery(sb.ToString());
+        }
+        private bool ExistExternalCode(string code)
+        {
+            StringBuilder sb = new StringBuilder("SELECT COUNT(1) countCodExt FROM NOTIFICA.codigos WHERE gruposid= 7 AND codigo =");
+            sb.Append(code).Append("'");
+            string[] columms = { "countCodExt" };
+            Dictionary<String, Object> d = SQLUtil.getQueryResult(sb.ToString(), columms);
+            Int64 value = (Int64)d["countCodExt"];
+            return value == 0;
         }
     }
 }

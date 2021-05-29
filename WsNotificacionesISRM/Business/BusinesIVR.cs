@@ -55,6 +55,7 @@ namespace WsNotificacionesISRM.Business
                 response.codigoMensaje = -1001;
                 log.Error(e.Message);
             }
+            log.Debug("response:" + response.ToString());
             log.Debug("Bey!!");
             return response;
         }

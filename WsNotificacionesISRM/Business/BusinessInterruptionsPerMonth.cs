@@ -329,6 +329,9 @@ namespace WsNotificacionesISRM.Business
             }
             return null;
         }
+
+        private bool validExistCodeSistemExtern(string code) { 
+        }
       
     }
 }
