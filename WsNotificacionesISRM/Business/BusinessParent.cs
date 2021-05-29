@@ -1,5 +1,6 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
+using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -127,7 +128,12 @@ namespace WsNotificacionesISRM.Business
             fields.Add("descripcionErrorSOAP", "");
             fields.Add("codRespSOAP", 0);
             fields.Add("codSistemaExterno", dcod["codSistemaExterno"]);
-            if (t.Equals(typeof(SmtpCommandException)))
+            if (t.Equals(typeof(AuthenticationException)))
+            {
+                fields.Add("descripcionErrorSMTP", "Error, en la autentificación de usuario del correo");
+                fields.Add("codRespSMTP", -1003);
+            }
+            else if (t.Equals(typeof(SmtpCommandException)))
             {
                 SmtpCommandException ex = (SmtpCommandException)e;
                 switch (ex.ErrorCode)
@@ -154,11 +160,12 @@ namespace WsNotificacionesISRM.Business
                 fields.Add("descripcionErrorSMTP", "Error, en el protocolo de envio (SMTP) del correo");
                 fields.Add("codRespSMTP", -1007);
             }
-            else if (t.Equals(typeof(AuthenticationException)))
+            else if (t.Equals(typeof(ParseException)))
             {
-                fields.Add("descripcionErrorSMTP", "Error, en la autentificación de usuario del correo");
-                fields.Add("codRespSMTP", -1003);
-            }
+                fields.Add("descripcionErrorSMTP", "Error, en el formato del/los correo(s) a enviar");
+                fields.Add("codRespSMTP", -1010);
+            }  
+           
             insertLogEnvioCorreoExterno(fields);
         }
         protected void SaveCorrectMailDelivery(SMTP.MailRequest mailRequest, Dictionary<String, Object> dcod)
@@ -180,14 +187,17 @@ namespace WsNotificacionesISRM.Business
             SQLUtil.executeQuery(sb.ToString());
         }
 
-        private string getExternalCode(Dictionary<String, Object> dcod) {
+        private string getExternalCode(Dictionary<String, Object> dcod)
+        {
             string code = (string)dcod["codSistemaExterno"];
-            if (ExistExternalCode(code)) {
+            if (ExistExternalCode(code))
+            {
                 InsertExternalCode(dcod);
             }
             return code;
         }
-        private void InsertExternalCode(Dictionary<String, Object> dcod) {
+        private void InsertExternalCode(Dictionary<String, Object> dcod)
+        {
             StringBuilder sb = new StringBuilder("INSERT INTO NOTIFICA.codigos (codigo,descripcion,gruposid) VALUES('");
             sb.Append(dcod["codSistemaExterno"]).Append("','").Append(dcod["description"]).Append("')");
             SQLUtil.executeQuery(sb.ToString());
