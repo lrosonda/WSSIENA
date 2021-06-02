@@ -8,7 +8,7 @@ namespace WsNotificacionesISRM.SMTP
 {
     interface IMailService
     {
-        Task SendEmailAsync(MailRequest mailRequest, Dictionary<String, Object> dcod);
+        Task<int> SendEmailAsync(MailRequest mailRequest, string cod);
     }
 
    

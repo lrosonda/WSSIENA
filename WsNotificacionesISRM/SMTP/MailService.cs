@@ -17,12 +17,12 @@ namespace WsNotificacionesISRM.SMTP
     {
         private readonly MailSettings _mailSettings;
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public MailService(IOptions<MailSettings> mailSettings)
+        public MailService(MailSettings mailSettings)
         {
-            _mailSettings = mailSettings.Value;
+            _mailSettings = mailSettings;
         }
 
-        public async Task SendEmailAsync(MailRequest mailRequest, Dictionary<String, Object> dcod)
+        public async Task<int> SendEmailAsync(MailRequest mailRequest, string cod)
         {
             var email = new MimeMessage();
             try
@@ -65,6 +65,13 @@ namespace WsNotificacionesISRM.SMTP
                 {
                     try
                     {
+                        if (_mailSettings.SecureSmtp != null && "TSL".Equals(_mailSettings.SecureSmtp))
+                        {
+                          smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
+                        }
+                        else {
+                            smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.None);
+                        }
                         smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
                         if (_mailSettings.Password != null && _mailSettings.Password.Length > 0)
                         {
@@ -72,33 +79,48 @@ namespace WsNotificacionesISRM.SMTP
                         }
                         await smtp.SendAsync(email);
                         await smtp.DisconnectAsync(true);
-                        SaveCorrectMailDelivery(mailRequest, dcod);
+                        SaveCorrectMailDelivery(mailRequest, cod);
                     }
                     catch (AuthenticationException ex)
                     {
                         log.Error("Message:" + ex.Message);
-                        SMTPErrorHandling(mailRequest, ex, ex.GetType(), dcod);
+                        SMTPErrorHandling(mailRequest, ex, ex.GetType(), cod);
+                        return -1003;
                     }
                     catch (SmtpCommandException ex)
                     {
-                        log.Error("Message:[" + ex.Message + "], StatusCode:" + ex.StatusCode);
-                        SMTPErrorHandling(mailRequest, ex, ex.GetType(), dcod);
+                        log.Error("Message:[" + ex.Message + "], StatusCode:" + ex.StatusCode); 
+                        return processExceptionSMTP( ex, mailRequest, cod);
                     }
                     catch (SmtpProtocolException ex)
                     {
                         log.Error("Message:" + ex.Message);
-                        SMTPErrorHandling(mailRequest, ex, ex.GetType(), dcod);
+                        SMTPErrorHandling(mailRequest, ex, ex.GetType(), cod);
+                        return -1007;
                     }
                 }
             }
             catch (ParseException ex)
             {
                 log.Error("Message:" + ex.Message);
-                SMTPErrorHandling(mailRequest, ex, ex.GetType(), dcod);
+                SMTPErrorHandling(mailRequest, ex, ex.GetType(), cod);
+                return -1010;
             }
+            return 0;
 
-
-        } 
-
+        }
+       private int processExceptionSMTP(SmtpCommandException ex, MailRequest mailRequest, string cod) {
+            SMTPErrorHandling(mailRequest, ex, ex.GetType(), cod);
+            switch (ex.ErrorCode)
+            {
+                case SmtpErrorCode.RecipientNotAccepted:
+                  return -1004;
+                case SmtpErrorCode.SenderNotAccepted:
+                    return -1005;
+                case SmtpErrorCode.MessageNotAccepted:
+                    return -1006;
+                default: return -9999;
+            }
+        }
     }
 }

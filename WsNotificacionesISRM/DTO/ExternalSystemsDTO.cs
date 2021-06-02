@@ -27,7 +27,7 @@ namespace WsNotificacionesISRM.DTO
         public string asunto { get => _asunto; set => _asunto = value; }
         public string mensaje { get => _mensaje; set => _mensaje = value; }
         public string codigoSiExt { get => _codigoSiExt; set => _codigoSiExt = value; }
-        public string pescripcionSiExt { get => _descripcionSiExt; set => _descripcionSiExt = value; }
+        public string descripcionSiExt { get => _descripcionSiExt; set => _descripcionSiExt = value; }
         public string path { get => _path; set => _path = value; }
         public int cantidadReenvio { get => _cantidadReenvio; set => _cantidadReenvio = value; }
         public override string ToString()

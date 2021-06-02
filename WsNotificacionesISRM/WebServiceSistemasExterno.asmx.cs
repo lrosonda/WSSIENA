@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
+using WsNotificacionesISRM.Business;
 using WsNotificacionesISRM.DTO;
 
 namespace WsNotificacionesISRM
@@ -17,12 +18,11 @@ namespace WsNotificacionesISRM
     // [System.Web.Script.Services.ScriptService]
     public class WebServiceSistemasExterno : System.Web.Services.WebService
     {
-
+        private static BusinessExternalSystems businessExternalSystems = new BusinessExternalSystems();
         [WebMethod]
         public RespuestaSistemaExternos envioCorreoExterno(SolicitudSistemaExternos solicitud)
         {
-            RespuestaSistemaExternos resp = new RespuestaSistemaExternos();
-            return resp;
+            return businessExternalSystems.envioCorreoExterno(solicitud);
         }
     }
 }

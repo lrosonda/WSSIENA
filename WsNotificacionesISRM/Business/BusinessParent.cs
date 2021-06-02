@@ -120,14 +120,32 @@ namespace WsNotificacionesISRM.Business
             }
             return false;
         }
-        protected void SMTPErrorHandling(SMTP.MailRequest mailRequest, Exception e, Type t, Dictionary<String, Object> dcod)
+        protected void SMTPErrorHandling(SMTP.MailRequest mailRequest, Exception e, Type t,string codExtern)
         {
             Dictionary<String, Object> fields = new Dictionary<string, object>();
             //"asunto","codRespSOAP","descripcionErrorSOAP","codRespSMTP","descripcionErrorSMTP",codSistemaExterno
             fields.Add("asunto", mailRequest.Subject);
             fields.Add("descripcionErrorSOAP", "");
             fields.Add("codRespSOAP", 0);
-            fields.Add("codSistemaExterno", dcod["codSistemaExterno"]);
+            fields.Add("codSistemaExterno", codExtern);
+            StringBuilder sb = new StringBuilder();
+            foreach (var mail in mailRequest.ToEmails) {
+                sb.Append(mail).Append(";");
+            }
+            fields.Add("ToEmails", sb.ToString());
+            sb.Clear();
+            foreach (var mail in mailRequest.CcEmails)
+            {
+                sb.Append(mail).Append(";");
+            }
+            fields.Add("CcEmails", sb.ToString());
+            sb.Clear();
+            foreach (var mail in mailRequest.BccEmails)
+            {
+                sb.Append(mail).Append(";");
+            }
+            fields.Add("BccEmails", sb.ToString());
+
             if (t.Equals(typeof(AuthenticationException)))
             {
                 fields.Add("descripcionErrorSMTP", "Error, en la autentificación de usuario del correo");
@@ -168,7 +186,7 @@ namespace WsNotificacionesISRM.Business
            
             insertLogEnvioCorreoExterno(fields);
         }
-        protected void SaveCorrectMailDelivery(SMTP.MailRequest mailRequest, Dictionary<String, Object> dcod)
+        protected void SaveCorrectMailDelivery(SMTP.MailRequest mailRequest,string cod)
         {
             Dictionary<String, Object> fields = new Dictionary<string, object>();
             //"asunto","codRespSOAP","descripcionErrorSOAP","codRespSMTP","descripcionErrorSMTP",codSistemaExterno
@@ -177,39 +195,33 @@ namespace WsNotificacionesISRM.Business
             fields.Add("codRespSOAP", 0);
             fields.Add("descripcionErrorSMTP", "Operación realizada de forma exitosa");
             fields.Add("codRespSMTP", 0);
+            fields.Add("codSistemaExterno", cod);
+            StringBuilder sb = new StringBuilder();
+            foreach (var mail in mailRequest.ToEmails)
+            {
+                sb.Append(mail).Append(";");
+            }
+            fields.Add("ToEmails", sb.ToString());
+            sb.Clear();
+            foreach (var mail in mailRequest.CcEmails)
+            {
+                sb.Append(mail).Append(";");
+            }
+            fields.Add("CcEmails", sb.ToString());
+            sb.Clear();
+            foreach (var mail in mailRequest.BccEmails)
+            {
+                sb.Append(mail).Append(";");
+            }
+            fields.Add("BccEmails", sb.ToString());
             insertLogEnvioCorreoExterno(fields);
         }
         private void insertLogEnvioCorreoExterno(Dictionary<String, Object> fields)
         {
-            StringBuilder sb = new StringBuilder("INSERT INTO NOTIFICA.log_envio_correo_externo (asunto,cod_resp_SOAP,descripcion_error_SOAP,cod_resp_SMTP,descripcion_error_SMTP,fecha_registro ,cod_sistema_externo) VALUES('");
-            sb.Append(fields["asunto"]).Append("',").Append(fields["codRespSOAP"]).Append(",'").Append(fields["descripcionErrorSOAP"]).Append("',").Append(fields["codRespSMTP"]).Append(",'").Append(fields["descripcionErrorSMTP"]).Append("',GETDATE(),'").Append(fields["codSistemaExterno"]).Append("')");
+            StringBuilder sb = new StringBuilder("INSERT INTO NOTIFICA.log_envio_correo_externo (asunto,cod_resp_SOAP,descripcion_error_SOAP,cod_resp_SMTP,descripcion_error_SMTP,fecha_registro ,cod_sistema_externo,correos_destino,correos_cc,correos_co) VALUES('");
+            sb.Append(fields["asunto"]).Append("',").Append(fields["codRespSOAP"]).Append(",'").Append(fields["descripcionErrorSOAP"]).Append("',").Append(fields["codRespSMTP"]).Append(",'").Append(fields["descripcionErrorSMTP"]).Append("',GETDATE(),'").Append(fields["codSistemaExterno"]).Append("','").Append(fields["ToEmails"]).Append("','").Append(fields["CcEmails"]).Append("','").Append(fields["BccEmails"]).Append("')");
             log.Debug("insertLogEnvioCorreoExterno:" + sb.ToString());
             SQLUtil.executeQuery(sb.ToString());
-        }
-
-        private string getExternalCode(Dictionary<String, Object> dcod)
-        {
-            string code = (string)dcod["codSistemaExterno"];
-            if (ExistExternalCode(code))
-            {
-                InsertExternalCode(dcod);
-            }
-            return code;
-        }
-        private void InsertExternalCode(Dictionary<String, Object> dcod)
-        {
-            StringBuilder sb = new StringBuilder("INSERT INTO NOTIFICA.codigos (codigo,descripcion,gruposid) VALUES('");
-            sb.Append(dcod["codSistemaExterno"]).Append("','").Append(dcod["description"]).Append("')");
-            SQLUtil.executeQuery(sb.ToString());
-        }
-        private bool ExistExternalCode(string code)
-        {
-            StringBuilder sb = new StringBuilder("SELECT COUNT(1) countCodExt FROM NOTIFICA.codigos WHERE gruposid= 7 AND codigo =");
-            sb.Append(code).Append("'");
-            string[] columms = { "countCodExt" };
-            Dictionary<String, Object> d = SQLUtil.getQueryResult(sb.ToString(), columms);
-            Int64 value = (Int64)d["countCodExt"];
-            return value == 0;
         }
     }
 }
