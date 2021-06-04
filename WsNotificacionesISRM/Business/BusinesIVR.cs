@@ -41,6 +41,11 @@ namespace WsNotificacionesISRM.Business
                         otherUpdate = otherUpdate + "No constesta'";
                         updateIVR("EV003", request.identificadorMensaje, "", otherUpdate);
                         break;
+                    case "D":
+                    case "DATOS INCONSISTENTES":
+                        otherUpdate = otherUpdate + "Datos inconsistentes'";
+                        updateIVR("EV003", request.identificadorMensaje, "", otherUpdate);
+                        break;
                     default:
                         otherUpdate = otherUpdate + "Otras razaones'";
                         updateIVR("EV003", request.identificadorMensaje, "", otherUpdate);

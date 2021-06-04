@@ -9,6 +9,8 @@ using WsNotificacionesISRM.SMTP;
 using IniParser;
 using System.IO;
 using System.Threading;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 
 namespace WsNotificacionesISRM.Business
 {
@@ -98,7 +100,7 @@ namespace WsNotificacionesISRM.Business
             string strDayExe = (String)keyValuePairs["dayExec"];
             string iniHour = (String)keyValuePairs["hora_inicial"];
             string endHour = (String)keyValuePairs["hora_fin"];
-           
+
             DateTime currentDateTime = DateTime.Now;
 
             int comparetoDate = currentDateTime.CompareTo(dateIni);
@@ -121,7 +123,8 @@ namespace WsNotificacionesISRM.Business
                             resp.codigoMensaje = -404;
                             return false;
                         }
-                        else {
+                        else
+                        {
                             Dictionary<String, Object> dcod = new Dictionary<string, object>();
                             dcod.Add("codSistemaExterno", solicitudEnvioMail.codigoSiExt);
                             dcod.Add("description", solicitudEnvioMail.descripcionSiExt);
@@ -129,7 +132,7 @@ namespace WsNotificacionesISRM.Business
                             Thread t = new Thread(() => SendMail(solicitudEnvioMail, idProcess, cod));
                             t.Start();
                         }
-                        
+
                     }
                 }
                 else
@@ -149,14 +152,20 @@ namespace WsNotificacionesISRM.Business
             }
             return true;
         }
-        private bool validateRequiredFields(SolicitudSistemaExternos resquestSistemExtern) {
-
+        private bool validateRequiredFields(SolicitudSistemaExternos resquestSistemExtern)
+        {
+            string nameFile = resquestSistemExtern.path;
+            if (nameFile != null && nameFile.Length > 0 && !File.Exists(nameFile))
+            {
+                log.Warn("El archivo no existe: " + nameFile);
+                return false;
+            }
             return ((resquestSistemExtern.correosDestinatarios != null && resquestSistemExtern.correosDestinatarios.Length > 0)
-                && (resquestSistemExtern.mensaje != null && resquestSistemExtern.mensaje.Length > 0) && 
-                (resquestSistemExtern.codigoSiExt!=null && resquestSistemExtern.codigoSiExt.Length==5)
-                && (resquestSistemExtern.descripcionSiExt!=null && (resquestSistemExtern.descripcionSiExt.Length>0 && resquestSistemExtern.descripcionSiExt.Length <=255)));
+            && (resquestSistemExtern.mensaje != null && resquestSistemExtern.mensaje.Length > 0) &&
+            (resquestSistemExtern.codigoSiExt != null && resquestSistemExtern.codigoSiExt.Length == 5)
+            && (resquestSistemExtern.descripcionSiExt != null && (resquestSistemExtern.descripcionSiExt.Length > 0 && resquestSistemExtern.descripcionSiExt.Length <= 255)));
         }
-        private static async void SendMail(SolicitudSistemaExternos resquestSistemExtern,int idProcess, string cod)
+        private static async void SendMail(SolicitudSistemaExternos resquestSistemExtern, int idProcess, string cod)
         {
             int repeat = resquestSistemExtern.cantidadReenvio;
             int i = 0;
@@ -169,10 +178,36 @@ namespace WsNotificacionesISRM.Business
             mailRequest.BccEmails = subsCO.ToList();
             mailRequest.CcEmails = subsCC.ToList();
             mailRequest.ToEmails = subsMails.ToList();
-           
-            do {
-              int result =  await mailService.SendEmailAsync(mailRequest, cod);
-                if (result == 0) {
+            List<IFormFile> Attachments = null;
+            if (File.Exists(resquestSistemExtern.path)) {
+                Attachments = new List<IFormFile>();
+                IFormFile formFile;
+                using (var fstream = new FileStream(resquestSistemExtern.path, FileMode.Open))
+                {
+                    var mstream = new MemoryStream();
+                    fstream.CopyTo(mstream);
+                    var strContentType =getStrContentType(fstream.Name);
+                    formFile = new FormFile(mstream, 0, mstream.Length, null, Path.GetFileName(fstream.Name))
+                    {
+                        Headers = new HeaderDictionary(),
+                        ContentType = strContentType
+                    };
+                }
+
+                //  FileStream fs =File.OpenRead(resquestSistemExtern.path);
+                 Attachments.Add(formFile);
+
+            }  
+            mailRequest.Attachments = Attachments;
+            bool flagExecuteError = true;
+            int result = 0;
+            do
+            {
+                 result = await mailService.SendEmailAsync(mailRequest, cod);
+                if (result == 0)
+                {
+                    flagExecuteError = false;
+                    SaveCorrectMailDelivery(mailRequest, cod);
                     break;
                 }
                 else
@@ -180,10 +215,42 @@ namespace WsNotificacionesISRM.Business
                     insertRetries(idProcess, result, i);
                 }
                 i++;
+            } while (i < repeat);
+            if (flagExecuteError) {
+                SMTPErrorHandling(mailRequest, result, cod);
             }
-            while (i < repeat);
+            
         }
-        private static string  getExternalCode(Dictionary<String, Object> dcod)
+
+        private static string getStrContentType(string file) {
+            String[] prefix = file.Split('.');
+            if (prefix.Length > 1){
+                switch (prefix[prefix.Length - 1])
+                {
+                    case "bz": return "application/x-bzip";
+                    case "bz2": return "application/x-bzip2";
+                    case "doc": return "application/msword";
+                    case "gif": return "image/gif";
+                    case "jpg":
+                    case "jpeg":
+                        return "image/jpeg";
+                    case "odt": return "application/vnd.oasis.opendocument.text";
+                    case "pdf": return "application/pdf";
+                    case "rar": return "application/x-rar-compressed";
+                    case "rtf": return "application/rtf";
+                    case "tar": return "application/x-tar";
+                    case "txt": return "text/plain";
+                    case "xls": return "application/vnd.ms-excel";
+                    case "xml": return "application/xml";
+                    case "zip": return "application/zip";
+                    default: return "application/octet-stream";
+                }
+            }
+            return "application/octet-stream";
+
+        }
+
+        private static string getExternalCode(Dictionary<String, Object> dcod)
         {
             string code = (string)dcod["codSistemaExterno"];
             if (ExistExternalCode(code))
@@ -208,12 +275,14 @@ namespace WsNotificacionesISRM.Business
             int value = (int)d["countCodExt"];
             return value == 0;
         }
-        private static void insertRetries(int idprocess,int err,int tried) {
+        private static void insertRetries(int idprocess, int err, int tried)
+        {
             StringBuilder sb = new StringBuilder("INSERT INTO NOTIFICA.reintentos(reintento,id_proceso,id_error) VALUES(").Append(tried).Append(",").Append(idprocess).Append(",").Append(getIdError(err)).Append(")");
             log.Debug("insertRetries:" + sb.ToString());
             SQLUtil.executeQuery(sb.ToString());
         }
-        private static int getIdError(int codError) {
+        private static int getIdError(int codError)
+        {
             StringBuilder sb = new StringBuilder("SELECT id_error FROM NOTIFICA.errores_sistemas WHERE codigo_error =").Append(codError);
             string[] columms = { "id_error" };
             Dictionary<String, Object> d = SQLUtil.getQueryResult(sb.ToString(), columms);
