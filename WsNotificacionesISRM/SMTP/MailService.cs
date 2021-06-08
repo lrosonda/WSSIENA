@@ -93,7 +93,7 @@ namespace WsNotificacionesISRM.SMTP
                     catch (SmtpCommandException ex)
                     {
                         log.Error("Message:[" + ex.Message + "], StatusCode:" + ex.StatusCode); 
-                        return processExceptionSMTP( ex, mailRequest, cod);
+                        return processExceptionSMTP( ex);
                     }
                     catch (SmtpProtocolException ex)
                     {
@@ -110,7 +110,7 @@ namespace WsNotificacionesISRM.SMTP
             return 0;
 
         }
-       private int processExceptionSMTP(SmtpCommandException ex, MailRequest mailRequest, string cod) {
+       private int processExceptionSMTP(SmtpCommandException ex) {
             switch (ex.ErrorCode)
             {
                 case SmtpErrorCode.RecipientNotAccepted:

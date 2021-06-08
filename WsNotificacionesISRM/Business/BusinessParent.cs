@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
+using WsNotificacionesISRM.DTO;
 
 namespace WsNotificacionesISRM.Business
 {
@@ -175,6 +176,20 @@ namespace WsNotificacionesISRM.Business
                     fields.Add("codRespSMTP", -1010);
                     break;
             }
+            insertLogEnvioCorreoExterno(fields);
+        }
+        protected void  SOAPError(SolicitudSistemaExternos req, int codErrorHTTP,string error) {
+            Dictionary<String, Object> fields = new Dictionary<string, object>();
+            //"asunto","codRespSOAP","descripcionErrorSOAP","codRespSMTP","descripcionErrorSMTP",codSistemaExterno
+            fields.Add("asunto", req.asunto);
+            fields.Add("descripcionErrorSOAP", error);
+            fields.Add("codRespSOAP", codErrorHTTP);
+            fields.Add("descripcionErrorSMTP", "");
+            fields.Add("codRespSMTP", 0);
+            fields.Add("codSistemaExterno", req.codigoSiExt);
+            fields.Add("ToEmails", req.correosDestinatarios);
+            fields.Add("CcEmails", req.correosCC);
+            fields.Add("BccEmails", req.correosCO);
             insertLogEnvioCorreoExterno(fields);
         }
         protected static void SaveCorrectMailDelivery(SMTP.MailRequest mailRequest,string cod)

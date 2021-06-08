@@ -75,19 +75,22 @@ namespace WsNotificacionesISRM.Business
                     log.Error("Sistema externos ha sido desactivado consultar los parametros notificaciones");
                     resp.mensajeRespuesta = "Error, webservice de sistemas externo se encuentra inactivo";
                     resp.codigoMensaje = -401;
+                    SOAPError(solicitud, resp.codigoMensaje, resp.mensajeRespuesta);
                 }
             }
             catch (SQLUtilException e)
             {
+                log.Error(e.Message);
                 resp.mensajeRespuesta = "Error, operación fallida de la base de datos";
                 resp.codigoMensaje = -1001;
-                log.Error(e.Message);
+                SOAPError(solicitud, resp.codigoMensaje, resp.mensajeRespuesta);
             }
             catch (BusinessException e)
             {
+                log.Error(e.Message);
                 resp.mensajeRespuesta = "Error, parametrización errada en el webservice de sistema externo";
                 resp.codigoMensaje = -1002;
-                log.Error(e.Message);
+                SOAPError(solicitud, resp.codigoMensaje, resp.mensajeRespuesta);
             }
             log.Debug("resp:" + resp.ToString());
             return resp;
@@ -113,6 +116,7 @@ namespace WsNotificacionesISRM.Business
                         log.Error("Error, sistemas externos fuera rango de ejecucución: [" + iniHour + "-" + endHour + "]");
                         resp.mensajeRespuesta = "Error, en el webservice de sistemas externo fuera de rango";
                         resp.codigoMensaje = -403;
+                        SOAPError(solicitudEnvioMail, resp.codigoMensaje, resp.mensajeRespuesta);
                         return false;
                     }
                     else
@@ -121,6 +125,7 @@ namespace WsNotificacionesISRM.Business
                         {
                             resp.mensajeRespuesta = "Error, en los datos del entra del envio del correo del  sistema externo";
                             resp.codigoMensaje = -404;
+                            SOAPError(solicitudEnvioMail, resp.codigoMensaje, resp.mensajeRespuesta);
                             return false;
                         }
                         else
@@ -140,6 +145,7 @@ namespace WsNotificacionesISRM.Business
                     log.Error("Error, hoy no se ejecuta el ws sistemas externos. Los dias que se ejecuta son: " + strDayExe);
                     resp.mensajeRespuesta = "Error, hoy no se ejecuta el webservice de sistemas externos";
                     resp.codigoMensaje = -402;
+                    SOAPError(solicitudEnvioMail, resp.codigoMensaje, resp.mensajeRespuesta);
                     return false;
                 }
             }
@@ -148,6 +154,7 @@ namespace WsNotificacionesISRM.Business
                 log.Error("Sistemas externo No se encuentra activo");
                 resp.mensajeRespuesta = "Error, webservice de sistemas externo se encuentra inactivo";
                 resp.codigoMensaje = -401;
+                SOAPError(solicitudEnvioMail, resp.codigoMensaje, resp.mensajeRespuesta);
                 return false;
             }
             return true;
@@ -203,7 +210,14 @@ namespace WsNotificacionesISRM.Business
             int result = 0;
             do
             {
-                 result = await mailService.SendEmailAsync(mailRequest, cod);
+                try
+                {
+                    result = await mailService.SendEmailAsync(mailRequest, cod);
+                }
+                catch (Exception e) {
+                    log.Warn("Excepcion no controlada: " + e.Message);
+                    result = -9999;
+                }
                 if (result == 0)
                 {
                     flagExecuteError = false;
