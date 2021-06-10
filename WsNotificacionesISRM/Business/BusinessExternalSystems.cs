@@ -1,16 +1,14 @@
-﻿using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
-using WsNotificacionesISRM.DTO;
-using WsNotificacionesISRM.SMTP;
-using IniParser;
-using System.IO;
-using System.Threading;
+﻿using IniParser;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using WsNotificacionesISRM.DTO;
+using WsNotificacionesISRM.SMTP;
 
 namespace WsNotificacionesISRM.Business
 {
@@ -186,14 +184,15 @@ namespace WsNotificacionesISRM.Business
             mailRequest.CcEmails = subsCC.ToList();
             mailRequest.ToEmails = subsMails.ToList();
             List<IFormFile> Attachments = null;
-            if (File.Exists(resquestSistemExtern.path)) {
+            if (File.Exists(resquestSistemExtern.path))
+            {
                 Attachments = new List<IFormFile>();
                 IFormFile formFile;
                 using (var fstream = new FileStream(resquestSistemExtern.path, FileMode.Open))
                 {
                     var mstream = new MemoryStream();
                     fstream.CopyTo(mstream);
-                    var strContentType =getStrContentType(fstream.Name);
+                    var strContentType = getStrContentType(fstream.Name);
                     formFile = new FormFile(mstream, 0, mstream.Length, null, Path.GetFileName(fstream.Name))
                     {
                         Headers = new HeaderDictionary(),
@@ -202,9 +201,9 @@ namespace WsNotificacionesISRM.Business
                 }
 
                 //  FileStream fs =File.OpenRead(resquestSistemExtern.path);
-                 Attachments.Add(formFile);
+                Attachments.Add(formFile);
 
-            }  
+            }
             mailRequest.Attachments = Attachments;
             bool flagExecuteError = true;
             int result = 0;
@@ -214,7 +213,8 @@ namespace WsNotificacionesISRM.Business
                 {
                     result = await mailService.SendEmailAsync(mailRequest, cod);
                 }
-                catch (Exception e) {
+                catch (Exception e)
+                {
                     log.Warn("Excepcion no controlada: " + e.Message);
                     result = -9999;
                 }
@@ -230,15 +230,18 @@ namespace WsNotificacionesISRM.Business
                 }
                 i++;
             } while (i < repeat);
-            if (flagExecuteError) {
+            if (flagExecuteError)
+            {
                 SMTPErrorHandling(mailRequest, result, cod);
             }
-            
+
         }
 
-        private static string getStrContentType(string file) {
+        private static string getStrContentType(string file)
+        {
             String[] prefix = file.Split('.');
-            if (prefix.Length > 1){
+            if (prefix.Length > 1)
+            {
                 switch (prefix[prefix.Length - 1])
                 {
                     case "bz": return "application/x-bzip";

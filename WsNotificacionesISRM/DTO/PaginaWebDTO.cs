@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace WsNotificacionesISRM.DTO
 {
@@ -15,14 +12,16 @@ namespace WsNotificacionesISRM.DTO
 
         public Encabezado encabezado { get => _encabezado; set => _encabezado = value; }
         public Detalle[] detalles { get => _detalles; set => _detalles = value; }
-        public override string ToString() {
+        public override string ToString()
+        {
             return $"{this._encabezado}{this._detalles}";
         }
     }
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ensa.com.pa/")]
-    public partial class Encabezado {
+    public partial class Encabezado
+    {
         private String _mensajeRespuesta;
         private Int32 _codigoMensaje;
         private Int32 _totalEnviada;
@@ -31,14 +30,15 @@ namespace WsNotificacionesISRM.DTO
         public int totalEnviada { get => _totalEnviada; set => _totalEnviada = value; }
         public override string ToString()
         {
-            return $"{this._codigoMensaje}{this._mensajeRespuesta}{this._totalEnviada}"; 
+            return $"{this._codigoMensaje}{this._mensajeRespuesta}{this._totalEnviada}";
         }
     }
 
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ensa.com.pa/")]
-    public partial class Detalle { 
+    public partial class Detalle
+    {
         private String _areaAfectada;
         private String _fechaAfetacion;
         private Int32 _horaInicioAfectacion;
@@ -57,13 +57,14 @@ namespace WsNotificacionesISRM.DTO
 
         public override string ToString()
         {
-            return $"{this._cantidadClienteAfectado}{this._areaAfectada}{this._duracion}{this._fechaAfetacion}{this._horaFinAfectacion}{this._horaInicioAfectacion}"; 
+            return $"{this._cantidadClienteAfectado}{this._areaAfectada}{this._duracion}{this._fechaAfetacion}{this._horaFinAfectacion}{this._horaInicioAfectacion}";
         }
     }
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ensa.com.pa/")]
-    public partial class SolicitudCorteAREA {
+    public partial class SolicitudCorteAREA
+    {
         private String _areaAfectada;
 
         public string areaAfectada { get => _areaAfectada; set => _areaAfectada = value; }
@@ -113,12 +114,13 @@ namespace WsNotificacionesISRM.DTO
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ensa.com.pa/")]
-    public partial class RespuestaCorteNAC {
+    public partial class RespuestaCorteNAC
+    {
         private Encabezado _encabezado;
         private DetalleNAC[] _detalles;
         public Encabezado encabezado { get => _encabezado; set => _encabezado = value; }
         public DetalleNAC[] detalles { get => _detalles; set => _detalles = value; }
-        
+
         public override string ToString()
         {
             return $"{this._detalles}{this._encabezado}";

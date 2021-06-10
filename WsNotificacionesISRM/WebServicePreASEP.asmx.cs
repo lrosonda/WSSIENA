@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Services;
+﻿using System.Web.Services;
 using WsNotificacionesISRM.Business;
 using WsNotificacionesISRM.DTO;
 
@@ -25,8 +21,9 @@ namespace WsNotificacionesISRM
             return new BusinessPreASEP().envioLotePreASEP();
         }
         [WebMethod]
-        public RespuestaConfirmacionPreASEP confirmacionLotePreASEP(SolicitudConfirmacionPreASEP request) {
-             return new BusinessPreASEP().confirmacionLotePreASEP( request);
+        public RespuestaConfirmacionPreASEP confirmacionLotePreASEP(SolicitudConfirmacionPreASEP request)
+        {
+            return new BusinessPreASEP().confirmacionLotePreASEP(request);
         }
     }
 }

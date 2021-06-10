@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 
 namespace WsNotificacionesISRM
 {
@@ -97,7 +95,8 @@ namespace WsNotificacionesISRM
             }
             return OK;
         }
-        public static List<Dictionary<String, Object>> getQueryResultList(string query, string[] columms) {
+        public static List<Dictionary<String, Object>> getQueryResultList(string query, string[] columms)
+        {
             List<Dictionary<String, Object>> keyValuePairs = new List<Dictionary<string, object>>();
             try
             {

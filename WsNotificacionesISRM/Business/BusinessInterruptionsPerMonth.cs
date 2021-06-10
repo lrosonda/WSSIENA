@@ -24,7 +24,7 @@ namespace WsNotificacionesISRM.Business
                 }
                 else
                 {
-                    resp =(RespuestaNotificaciones) errorFillREsponse(resp.GetType(), "Error, webservice de la pagina web de ENSA inactivo", -301);
+                    resp = (RespuestaNotificaciones)errorFillREsponse(resp.GetType(), "Error, webservice de la pagina web de ENSA inactivo", -301);
                 }
             }
             catch (SQLUtilException e)
@@ -56,7 +56,7 @@ namespace WsNotificacionesISRM.Business
                     log.Debug("status:" + status);
                     if (status.Equals("NT001"))
                     {
-                     respuestaCorteNAC =(RespuestaCorteNAC)   runProcess( keyValuesProcess, solicitudCorteNAC, respuestaCorteNAC.GetType());
+                        respuestaCorteNAC = (RespuestaCorteNAC)runProcess(keyValuesProcess, solicitudCorteNAC, respuestaCorteNAC.GetType());
                     }
                     else
                     {
@@ -107,7 +107,7 @@ namespace WsNotificacionesISRM.Business
                 }
                 else
                 {
-                    resp = (RespuestaNotificaciones)errorFillREsponse( resp.GetType(), "Error, el parametro de entrada del área no puede ser nulo", -303);
+                    resp = (RespuestaNotificaciones)errorFillREsponse(resp.GetType(), "Error, el parametro de entrada del área no puede ser nulo", -303);
                 }
             }
             catch (SQLUtilException e)
@@ -133,8 +133,8 @@ namespace WsNotificacionesISRM.Business
             encabezado.codigoMensaje = codMessage;
             encabezado.mensajeRespuesta = message;
             encabezado.totalEnviada = 0;
-            
-            if (t.Equals(typeof(RespuestaNotificaciones))  )
+
+            if (t.Equals(typeof(RespuestaNotificaciones)))
             {
                 RespuestaNotificaciones _resp = new RespuestaNotificaciones();
                 Detalle[] _detalle = new Detalle[0];
@@ -153,7 +153,7 @@ namespace WsNotificacionesISRM.Business
             }
             return null;
         }
-        private Object runProcess( Dictionary<String, Object> keyValuesProcess, object resquest, Type t)
+        private Object runProcess(Dictionary<String, Object> keyValuesProcess, object resquest, Type t)
         {
             Int32 idProcess = (Int32)keyValuesProcess["id_proceso"];
             Dictionary<String, Object> keyValuePairs = getProcessParameters(idProcess);
@@ -172,7 +172,7 @@ namespace WsNotificacionesISRM.Business
                     {
                         if (validateExecutionHours(iniHour, endHour, currentDateTime))
                         {
-                           return buildsMessageResponse(idProcess, sql, resquest,t);
+                            return buildsMessageResponse(idProcess, sql, resquest, t);
                         }
                         else
                         {
@@ -182,14 +182,14 @@ namespace WsNotificacionesISRM.Business
                     }
                     else
                     {
-                        return buildsMessageResponse(idProcess, sql,resquest, t);
+                        return buildsMessageResponse(idProcess, sql, resquest, t);
                     }
 
                 }
                 else
                 {
                     string messageErr = "Error, hoy no se ejecuta el servicio web de la pag web de ENSA.Los dias que se ejecuta son: " + strDayExe;
-                 return errorFillREsponse(t, messageErr, -302);
+                    return errorFillREsponse(t, messageErr, -302);
                 }
             }
             else
@@ -232,12 +232,12 @@ namespace WsNotificacionesISRM.Business
             }
             else
             {
-                resp = (RespuestaNotificaciones) errorFillREsponse(resp.GetType(), "No hay registros", 200);
+                resp = (RespuestaNotificaciones)errorFillREsponse(resp.GetType(), "No hay registros", 200);
             }
             return resp;
         }
 
-        private RespuestaCorteNAC buillNotificacionesNac( string str)
+        private RespuestaCorteNAC buillNotificacionesNac(string str)
         {
             RespuestaCorteNAC resp = new RespuestaCorteNAC();
             string[] columms = { "areaAfectada", "fechaAfetacion", "horaInicioAfectacion", "horaFinAfectacion", "horasAfectacion", "duracion" };
@@ -268,7 +268,7 @@ namespace WsNotificacionesISRM.Business
             }
             else
             {
-                resp =(RespuestaCorteNAC) errorFillREsponse(resp.GetType(), "No hay registros", 200);
+                resp = (RespuestaCorteNAC)errorFillREsponse(resp.GetType(), "No hay registros", 200);
             }
             return resp;
         }
@@ -314,22 +314,23 @@ namespace WsNotificacionesISRM.Business
             {
                 sb.Replace("'CORTE'", sbFilters.ToString());
             }
-            if(sbWhere.Length > 0)
+            if (sbWhere.Length > 0)
             {
                 sb.Replace("WHERE", sbWhere.ToString());
             }
 
             log.Debug("SQL maneuversReceived:" + sb.ToString());
-            if (t.Equals(typeof(RespuestaNotificaciones)) ) {
+            if (t.Equals(typeof(RespuestaNotificaciones)))
+            {
                 return buillNotificaciones(sb.ToString());
             }
-            else if (t.Equals(typeof(RespuestaCorteNAC)) )
+            else if (t.Equals(typeof(RespuestaCorteNAC)))
             {
                 return buillNotificacionesNac(sb.ToString());
             }
             return null;
         }
 
-      
+
     }
 }

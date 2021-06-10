@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Web;
 using WsNotificacionesISRM.DTO;
 
 namespace WsNotificacionesISRM.Business
@@ -143,8 +142,8 @@ namespace WsNotificacionesISRM.Business
                     d.MRID_SDPNAC = (string)m["MRID_SDPNAC"];
                     d.MRDIDWOR = (string)m["MRDIDWORK"];
                     d.TIPO_MSG = (string)m["TIPO_MSG"];
-                    String otherUpdate = "num_lote='"+strDate + "'";
-                    d.idNotificacionEnviada=(Int32)m["IdentificadorMensaje"];
+                    String otherUpdate = "num_lote='" + strDate + "'";
+                    d.idNotificacionEnviada = (Int32)m["IdentificadorMensaje"];
                     updatePREASEP("ES001", d.idNotificacionEnviada, null, otherUpdate);
                     _detalles[i] = d;
                     i++;
@@ -182,31 +181,35 @@ namespace WsNotificacionesISRM.Business
         public RespuestaConfirmacionPreASEP confirmacionLotePreASEP(SolicitudConfirmacionPreASEP request)
         {
             log.Debug("Welcome!!");
-            log.Debug("request: "+ request.ToString());
+            log.Debug("request: " + request.ToString());
             RespuestaConfirmacionPreASEP response = processResponse(request);
             log.Debug("response: " + response.ToString());
             return response;
         }
-        private RespuestaConfirmacionPreASEP processResponse(SolicitudConfirmacionPreASEP request) {
+        private RespuestaConfirmacionPreASEP processResponse(SolicitudConfirmacionPreASEP request)
+        {
             RespuestaConfirmacionPreASEP response = new RespuestaConfirmacionPreASEP();
-            try {
+            try
+            {
                 DetalleNotificacionFallida[] _detalle = request.detalle;
-                foreach (DetalleNotificacionFallida d in _detalle) {
+                foreach (DetalleNotificacionFallida d in _detalle)
+                {
                     string otherUpdate = "mensaje_actualizacion='" + d.mensajeRespuesta + "'";
-                    switch (d.codigoMensaje) {
+                    switch (d.codigoMensaje)
+                    {
                         case 0:
-                           updatePREASEP("ES002", d.idNotificacionEnviada, null, otherUpdate);
+                            updatePREASEP("ES002", d.idNotificacionEnviada, null, otherUpdate);
                             break;//ok
                         case -211:
                         case -212:
                             updatePREASEP("ES003", d.idNotificacionEnviada, null, otherUpdate);
                             break;//Error
                         default:
-                            throw new BusinessException("El codigo devuelto no es reconocido:"+ d.codigoMensaje);
-                        
+                            throw new BusinessException("El codigo devuelto no es reconocido:" + d.codigoMensaje);
+
                     }
                 }
-                response.mensajeRespuesta   =  "Operación realizada de forma exitosa";
+                response.mensajeRespuesta = "Operación realizada de forma exitosa";
                 response.codigoMensaje = 0;
             }
             catch (SQLUtilException e)
@@ -223,7 +226,8 @@ namespace WsNotificacionesISRM.Business
             }
             return response;
         }
-        private static void updatePREASEP(string status, Int32 idmanReceived, string lotNum, string otherUpdate) {
+        private static void updatePREASEP(string status, Int32 idmanReceived, string lotNum, string otherUpdate)
+        {
             StringBuilder sb = new StringBuilder("UPDATE NOTIFICA.notificaciones_procesadas SET status_ASEP ='");
             if (otherUpdate.Length > 1)
             {
@@ -235,10 +239,11 @@ namespace WsNotificacionesISRM.Business
             }
             if (idmanReceived > 0)
             {
-              sb.Append(" WHERE id_maniobra_recibida=").Append(idmanReceived);
+                sb.Append(" WHERE id_maniobra_recibida=").Append(idmanReceived);
             }
-            else {
-              sb.Append(" WHERE num_lote='").Append(lotNum).Append("'");
+            else
+            {
+                sb.Append(" WHERE num_lote='").Append(lotNum).Append("'");
             }
             log.Debug("updatePREASEP:" + sb.ToString());
             SQLUtil.executeQuery(sb.ToString());

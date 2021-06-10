@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Services;
+﻿using System.Web.Services;
 using WsNotificacionesISRM.Business;
 using WsNotificacionesISRM.DTO;
 using static WsNotificacionesISRM.DTO.RespuestaEnvioIVR;
@@ -23,10 +19,11 @@ namespace WsNotificacionesISRM
         [WebMethod]
         public RespuestaEnvioIVR envioIVR(SolicitudEnvioIVR solicitudEnvioIVR)
         {
-           return new BusinesIVR().envioIVR(solicitudEnvioIVR);
+            return new BusinesIVR().envioIVR(solicitudEnvioIVR);
         }
         [WebMethod]
-        public RespuestaConfirmacionIVR confirmacionIVR(SolitudConfirmacionIVR solitudConfirmacionIVR) {  
+        public RespuestaConfirmacionIVR confirmacionIVR(SolitudConfirmacionIVR solitudConfirmacionIVR)
+        {
             return new BusinesIVR().confirmacionIVR(solitudConfirmacionIVR);
         }
     }

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Microsoft.Extensions.Options;
+﻿using MailKit.Net.Smtp;
+using MailKit.Security;
 using MimeKit;
-using MailKit.Net.Smtp;
-
 using System.IO;
 using System.Threading.Tasks;
-using MailKit.Security;
 using WsNotificacionesISRM.Business;
 
 namespace WsNotificacionesISRM.SMTP
@@ -34,17 +28,19 @@ namespace WsNotificacionesISRM.SMTP
                 }
                 foreach (var onEmail in mailRequest.CcEmails)
                 {
-                    if (onEmail != null && onEmail.Length > 0 && !onEmail.Equals("")) {
+                    if (onEmail != null && onEmail.Length > 0 && !onEmail.Equals(""))
+                    {
                         email.Cc.Add(MailboxAddress.Parse(onEmail));
                     }
-                    
+
                 }
                 foreach (var onEmail in mailRequest.BccEmails)
                 {
-                    if (onEmail != null && onEmail.Length > 0 && !onEmail.Equals("")) {
+                    if (onEmail != null && onEmail.Length > 0 && !onEmail.Equals(""))
+                    {
                         email.Bcc.Add(MailboxAddress.Parse(onEmail));
                     }
-                        
+
                 }
                 email.Subject = mailRequest.Subject;
                 var builder = new BodyBuilder();
@@ -74,14 +70,15 @@ namespace WsNotificacionesISRM.SMTP
                     {//TLS
                         if (_mailSettings.SecureSmtp != null && "TLS".Equals(_mailSettings.SecureSmtp))
                         {
-                          smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
+                            smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
                         }
-                        else {
+                        else
+                        {
                             smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.None);
                         }
-                      
+
                         smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
-                      
+
                         await smtp.SendAsync(email);
                         await smtp.DisconnectAsync(true);
                     }
@@ -92,8 +89,8 @@ namespace WsNotificacionesISRM.SMTP
                     }
                     catch (SmtpCommandException ex)
                     {
-                        log.Error("Message:[" + ex.Message + "], StatusCode:" + ex.StatusCode); 
-                        return processExceptionSMTP( ex);
+                        log.Error("Message:[" + ex.Message + "], StatusCode:" + ex.StatusCode);
+                        return processExceptionSMTP(ex);
                     }
                     catch (SmtpProtocolException ex)
                     {
@@ -110,11 +107,12 @@ namespace WsNotificacionesISRM.SMTP
             return 0;
 
         }
-       private int processExceptionSMTP(SmtpCommandException ex) {
+        private int processExceptionSMTP(SmtpCommandException ex)
+        {
             switch (ex.ErrorCode)
             {
                 case SmtpErrorCode.RecipientNotAccepted:
-                  return -1004;
+                    return -1004;
                 case SmtpErrorCode.SenderNotAccepted:
                     return -1005;
                 case SmtpErrorCode.MessageNotAccepted:

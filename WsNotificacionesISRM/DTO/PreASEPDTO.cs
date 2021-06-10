@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace WsNotificacionesISRM.DTO
 {
@@ -38,7 +35,7 @@ namespace WsNotificacionesISRM.DTO
     {
         private string _fechaSENDMSG;
         private string _MRID_SAP;
-        private string  _MRID_SDPNAC;
+        private string _MRID_SDPNAC;
         private string _MRDIDWOR;
         private string _TIPO_MSG;
         private Int32 _idNotificacionEnviada;
@@ -53,7 +50,8 @@ namespace WsNotificacionesISRM.DTO
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ensa.com.pa/")]
-    public partial class SolicitudConfirmacionPreASEP {
+    public partial class SolicitudConfirmacionPreASEP
+    {
         EncabezadoConfirmacionPreASEP _encabezado;
         DetalleNotificacionFallida[] _detalle;
         public EncabezadoConfirmacionPreASEP encabezado { get => _encabezado; set => _encabezado = value; }
@@ -76,7 +74,8 @@ namespace WsNotificacionesISRM.DTO
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ensa.com.pa/")]
-    public partial class EncabezadoConfirmacionPreASEP { 
+    public partial class EncabezadoConfirmacionPreASEP
+    {
         private Int32 _totalRecibida;
         private Int32 _totalCorrectas;
         private Int32 _totalFallidas;
@@ -99,5 +98,5 @@ namespace WsNotificacionesISRM.DTO
         public int codigoMensaje { get => _codigoMensaje; set => _codigoMensaje = value; }
         public int idNotificacionEnviada { get => _idNotificacionEnviada; set => _idNotificacionEnviada = value; }
     }
-    
+
 }

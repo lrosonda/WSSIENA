@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Services;
+﻿using System.Web.Services;
 using WsNotificacionesISRM.Business;
 using WsNotificacionesISRM.DTO;
 
@@ -25,13 +21,15 @@ namespace WsNotificacionesISRM
             return new BusinessInterruptionsPerMonth().notificacionesCorteTODAS();
         }
         [WebMethod]
-        public RespuestaNotificaciones notificacionesCorteAREA(SolicitudCorteAREA solicitudCorteAREA) {
-            
-            return new BusinessInterruptionsPerMonth().notificacionesCorteAREA( solicitudCorteAREA);
+        public RespuestaNotificaciones notificacionesCorteAREA(SolicitudCorteAREA solicitudCorteAREA)
+        {
+
+            return new BusinessInterruptionsPerMonth().notificacionesCorteAREA(solicitudCorteAREA);
         }
         [WebMethod]
-        public RespuestaCorteNAC notificacionesCorteNAC(SolicitudCorteNAC solicitudCorteNAC) {
-            return new BusinessInterruptionsPerMonth().notificacionesCorteNAC( solicitudCorteNAC);
+        public RespuestaCorteNAC notificacionesCorteNAC(SolicitudCorteNAC solicitudCorteNAC)
+        {
+            return new BusinessInterruptionsPerMonth().notificacionesCorteNAC(solicitudCorteNAC);
         }
     }
 }

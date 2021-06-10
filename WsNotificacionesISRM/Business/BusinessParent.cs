@@ -1,11 +1,6 @@
-﻿using MailKit.Net.Smtp;
-using MailKit.Security;
-using MimeKit;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Web;
 using WsNotificacionesISRM.DTO;
 
 namespace WsNotificacionesISRM.Business
@@ -121,7 +116,7 @@ namespace WsNotificacionesISRM.Business
             }
             return false;
         }
-        protected static void SMTPErrorHandling(SMTP.MailRequest mailRequest, int codError,string codExtern)
+        protected static void SMTPErrorHandling(SMTP.MailRequest mailRequest, int codError, string codExtern)
         {
             Dictionary<String, Object> fields = new Dictionary<string, object>();
             //"asunto","codRespSOAP","descripcionErrorSOAP","codRespSMTP","descripcionErrorSMTP",codSistemaExterno
@@ -130,7 +125,8 @@ namespace WsNotificacionesISRM.Business
             fields.Add("codRespSOAP", 0);
             fields.Add("codSistemaExterno", codExtern);
             StringBuilder sb = new StringBuilder();
-            foreach (var mail in mailRequest.ToEmails) {
+            foreach (var mail in mailRequest.ToEmails)
+            {
                 sb.Append(mail).Append(";");
             }
             fields.Add("ToEmails", sb.ToString());
@@ -145,28 +141,28 @@ namespace WsNotificacionesISRM.Business
             {
                 sb.Append(mail).Append(";");
             }
-            fields.Add("BccEmails", sb.ToString());   
-                switch (codError)
-                {
+            fields.Add("BccEmails", sb.ToString());
+            switch (codError)
+            {
                 case -1003:
                     fields.Add("descripcionErrorSMTP", "Error, en la autentificación de usuario del correo");
                     fields.Add("codRespSMTP", -1003);
                     break;
                 case -1004:
-                        //    Console.WriteLine("\tRecipient not accepted: {0}", ex.Mailbox);
-                        fields.Add("descripcionErrorSMTP", "Error, en los datos del destinatario del correo");
-                        fields.Add("codRespSMTP", -1004);
-                        break;
-                    case -1005:
-                        //   Console.WriteLine("\tSender not accepted: {0}", ex.Mailbox);
-                        fields.Add("descripcionErrorSMTP", "Error, en los datos del remitente del correo");
-                        fields.Add("codRespSMTP", -1005);
-                        break;
-                    case -1006:
-                        //   Console.WriteLine("\tMessage not accepted.");
-                        fields.Add("descripcionErrorSMTP", "Error, en los datos del mensaje del correo");
-                        fields.Add("codRespSMTP", -1006);
-                        break;
+                    //    Console.WriteLine("\tRecipient not accepted: {0}", ex.Mailbox);
+                    fields.Add("descripcionErrorSMTP", "Error, en los datos del destinatario del correo");
+                    fields.Add("codRespSMTP", -1004);
+                    break;
+                case -1005:
+                    //   Console.WriteLine("\tSender not accepted: {0}", ex.Mailbox);
+                    fields.Add("descripcionErrorSMTP", "Error, en los datos del remitente del correo");
+                    fields.Add("codRespSMTP", -1005);
+                    break;
+                case -1006:
+                    //   Console.WriteLine("\tMessage not accepted.");
+                    fields.Add("descripcionErrorSMTP", "Error, en los datos del mensaje del correo");
+                    fields.Add("codRespSMTP", -1006);
+                    break;
                 case -1007:
                     fields.Add("descripcionErrorSMTP", "Error, en el protocolo de envio (SMTP) del correo");
                     fields.Add("codRespSMTP", -1007);
@@ -178,7 +174,8 @@ namespace WsNotificacionesISRM.Business
             }
             insertLogEnvioCorreoExterno(fields);
         }
-        protected void  SOAPError(SolicitudSistemaExternos req, int codErrorHTTP,string error) {
+        protected void SOAPError(SolicitudSistemaExternos req, int codErrorHTTP, string error)
+        {
             Dictionary<String, Object> fields = new Dictionary<string, object>();
             //"asunto","codRespSOAP","descripcionErrorSOAP","codRespSMTP","descripcionErrorSMTP",codSistemaExterno
             fields.Add("asunto", req.asunto);
@@ -192,7 +189,7 @@ namespace WsNotificacionesISRM.Business
             fields.Add("BccEmails", req.correosCO);
             insertLogEnvioCorreoExterno(fields);
         }
-        protected static void SaveCorrectMailDelivery(SMTP.MailRequest mailRequest,string cod)
+        protected static void SaveCorrectMailDelivery(SMTP.MailRequest mailRequest, string cod)
         {
             Dictionary<String, Object> fields = new Dictionary<string, object>();
             //"asunto","codRespSOAP","descripcionErrorSOAP","codRespSMTP","descripcionErrorSMTP",codSistemaExterno

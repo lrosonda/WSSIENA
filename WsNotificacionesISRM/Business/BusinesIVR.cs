@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Web;
 using WsNotificacionesISRM.DTO;
 using static WsNotificacionesISRM.DTO.RespuestaEnvioIVR;
 
@@ -17,6 +16,8 @@ namespace WsNotificacionesISRM.Business
        
 
         public RespuestaConfirmacionIVR confirmacionIVR(SolitudConfirmacionIVR request) {
+        public RespuestaConfirmacionIVR confirmacionIVR(SolitudConfirmacionIVR request)
+        {
             log.Debug("Welcome!!");
             log.Debug("request: " + request.ToString());
             RespuestaConfirmacionIVR response = new RespuestaConfirmacionIVR();
@@ -71,7 +72,7 @@ namespace WsNotificacionesISRM.Business
             log.Debug("solicitudEnvioIVR: " + solicitudEnvioIVR.ToString());
             RespuestaEnvioIVR resp = new RespuestaEnvioIVR();
             try
-            { 
+            {
                 Dictionary<String, Object> keyValuesProcess = retrieveNotificationProcesses("WS_IVR");
                 string status = (string)keyValuesProcess["status"];
                 log.Debug("status:" + status);
@@ -227,8 +228,8 @@ namespace WsNotificacionesISRM.Business
         {
             updateIVR(status, idmanReceived, "", "");
         }
-      
-        private static void updateIVR(string status, Int32 idmanReceived, string otherOondition,string otherUpdate)
+
+        private static void updateIVR(string status, Int32 idmanReceived, string otherOondition, string otherUpdate)
         {
             StringBuilder sb = new StringBuilder("UPDATE NOTIFICA.notificaciones_procesadas SET status_IVR ='");
             if (otherUpdate.Length > 1)
@@ -239,7 +240,7 @@ namespace WsNotificacionesISRM.Business
             {
                 sb.Append(status).Append("', fecha_act_IVR = GETDATE()").Append(" WHERE id_maniobra_recibida=").Append(idmanReceived);
             }
-            
+
             if (otherOondition.Length > 1)
             {
                 sb.Append(otherOondition);

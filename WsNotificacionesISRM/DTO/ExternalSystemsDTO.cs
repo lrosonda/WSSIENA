@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace WsNotificacionesISRM.DTO
 {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ensa.com.pa/")]
-    public partial class SolicitudSistemaExternos {
+    public partial class SolicitudSistemaExternos
+    {
         private string _correoOrigen;
         private string _correosDestinatarios;
         private string _correosCC;
@@ -49,4 +47,4 @@ namespace WsNotificacionesISRM.DTO
             return $"{this._codigoMensaje} {this._mensajeRespuesta}";
         }
     }
-    }
+}
