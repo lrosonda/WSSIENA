@@ -13,9 +13,8 @@ namespace WsNotificacionesISRM.Business
     public class BusinesIVR : BusinessParent
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-       
 
-        public RespuestaConfirmacionIVR confirmacionIVR(SolitudConfirmacionIVR request) {
+
         public RespuestaConfirmacionIVR confirmacionIVR(SolitudConfirmacionIVR request)
         {
             log.Debug("Welcome!!");
